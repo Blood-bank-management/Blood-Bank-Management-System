@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,11 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+
+# Authentication (BBMS-F-001, BBMS-F-002, BBMS-SR-001)
+# Django's built-in session authentication; unauthenticated requests to
+# @login_required views are redirected to LOGIN_URL.
+LOGIN_URL = 'authentication:login'
+LOGIN_REDIRECT_URL = 'authentication:home'
+LOGOUT_REDIRECT_URL = 'authentication:login'
