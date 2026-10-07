@@ -1,37 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Blood Availability Search</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <h1>Blood Availability Search</h1>
+{% block title %}Blood Availability{% endblock %}
 
-    <form method="get">
-        <label for="blood_group">Select Blood Group:</label>
+{% block content %}
 
-        <select name="blood_group" id="blood_group">
-            <option value="">-- Select --</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-        </select>
+<h1>Blood Availability Search</h1>
 
-        <button type="submit">Search</button>
-    </form>
+<form method="get">
+    <label for="blood_group">Select Blood Group:</label>
 
-    {% if result is not None %}
-        <h2>Available Quantity: {{ result }} units</h2>
-    {% endif %}
+    <select name="blood_group" id="blood_group">
+        <option value="">-- Select --</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+    </select>
 
-    {% if message %}
-        <p>{{ message }}</p>
-    {% endif %}
+    <button type="submit">Search</button>
+</form>
 
-</body>
-</html>
+{% if result is not None %}
+    <h2>Available: {{ result }} units</h2>
+{% endif %}
+
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+
+{% endblock %}
