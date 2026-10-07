@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Summary{% endblock %}
+
+{% block content %}
+
+<h1>Blood Inventory Summary</h1>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <tr>
+        <th>Blood Group</th>
+        <th>Available Units</th>
+    </tr>
+
+    {% for item in inventory %}
+    <tr>
+        <td>{{ item.blood_group }}</td>
+        <td>{{ item.quantity }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}

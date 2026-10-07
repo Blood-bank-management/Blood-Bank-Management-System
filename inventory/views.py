@@ -38,3 +38,31 @@ def availability_search(request):
             "message": message,
         },
     )
+
+
+def inventory_summary(request):
+    valid_groups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+
+    inventory = []
+
+    for group in valid_groups:
+        total = sum(
+            item.quantity
+            for item in BloodInventory.objects.filter(
+                blood_group=group,
+                expiry_date__gte=date.today()
+            )
+        )
+
+        inventory.append({
+            "blood_group": group,
+            "quantity": total,
+        })
+
+    return render(
+        request,
+        "inventory/inventory_summary.html",
+        {
+            "inventory": inventory,
+        },
+    )

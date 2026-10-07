@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import availability_search
+from . import views
 
 urlpatterns = [
-    path("availability/", availability_search, name="availability_search"),
+    path("availability/", views.availability_search, name="availability_search"),
+    path("inventory-summary/", views.inventory_summary, name="inventory_summary"),
 ]
