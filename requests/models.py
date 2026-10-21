@@ -55,3 +55,44 @@ class BloodRequest(models.Model):
 
     def __str__(self):
         return f'{self.tracking_id} - {self.blood_group} ({self.quantity} units)'
+
+
+class BloodInventory(models.Model):
+    blood_group = models.CharField(
+        max_length=3,
+        choices=BloodRequest.BloodGroup.choices,
+        unique=True,
+    )
+    available_units = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('blood_group',)
+        verbose_name_plural = 'blood inventory'
+
+    def __str__(self):
+        return f'{self.blood_group}: {self.available_units} units'
+
+
+class BloodIssue(models.Model):
+    class Status(models.TextChoices):
+        ISSUED = 'issued', 'Issued'
+        REVERSED = 'reversed', 'Reversed'
+
+    request = models.OneToOneField(
+        BloodRequest,
+        on_delete=models.PROTECT,
+        related_name='issue_transaction',
+    )
+    blood_group = models.CharField(max_length=3, choices=BloodRequest.BloodGroup.choices)
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.ISSUED)
+    issued_by = models.ForeignKey('auth.User', on_delete=models.PROTECT, related_name='blood_issues')
+    issue_note = models.TextField(blank=True)
+    issued_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-issued_at',)
+
+    def __str__(self):
+        return f'Issue for {self.request.tracking_id}: {self.quantity} units'

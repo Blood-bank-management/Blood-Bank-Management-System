@@ -10,4 +10,5 @@ urlpatterns = [
     path('requests/<uuid:tracking_id>/', views.request_detail, name='detail'),
     path('staff/requests/', views.request_queue, name='queue'),
     path('staff/requests/<uuid:tracking_id>/review/', views.request_review, name='review'),
+    path('staff/requests/<uuid:tracking_id>/issue/', views.issue_blood, name='issue'),
 ]
