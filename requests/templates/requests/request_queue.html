@@ -1,0 +1,34 @@
+{% extends 'requests/base.html' %}
+{% block title %}Review blood requests{% endblock %}
+{% block content %}
+<section class="panel">
+    <p class="muted">Staff workspace</p>
+    <h1>Blood request queue</h1>
+    <p class="intro">Review pending requests and update their status. Requesters can track changes with their tracking ID.</p>
+    {% for blood_request in requests %}
+        <article class="request-row">
+            <div class="request-meta">
+                <div>
+                    <strong>{{ blood_request.blood_group }} / {{ blood_request.quantity }} unit{{ blood_request.quantity|pluralize }}</strong>
+                    <div class="muted">{{ blood_request.hospital_name }} · {{ blood_request.requester_name }}</div>
+                    <div class="muted">{{ blood_request.created_at|date:"j M Y, H:i" }} · {{ blood_request.tracking_id }}</div>
+                </div>
+                <span class="status {{ blood_request.status }}">{{ blood_request.get_status_display }}</span>
+            </div>
+            {% if blood_request.status == 'pending' %}
+                <form class="review-form" method="post" action="{% url 'requests:review' tracking_id=blood_request.tracking_id %}">
+                    {% csrf_token %}
+                    <div class="radio">
+                        <label><input type="radio" name="action" value="approved" required> Approve</label>
+                        <label><input type="radio" name="action" value="rejected"> Reject</label>
+                    </div>
+                    <div class="field"><label for="note-{{ blood_request.pk }}">Review note</label><textarea id="note-{{ blood_request.pk }}" name="review_note" rows="2" maxlength="500"></textarea></div>
+                    <button class="button" type="submit">Save decision</button>
+                </form>
+            {% else %}
+                <p class="muted">{{ blood_request.review_note|default:'No review note recorded.' }}</p>
+            {% endif %}
+        </article>
+    {% empty %}<p>No blood requests have been submitted yet.</p>{% endfor %}
+</section>
+{% endblock %}

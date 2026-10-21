@@ -1,0 +1,21 @@
+{% extends 'requests/base.html' %}
+{% block title %}Track blood request{% endblock %}
+{% block content %}
+<section class="panel">
+    <p class="muted">Request tracking</p>
+    <h1>{{ blood_request.blood_group }} blood request</h1>
+    <p class="intro">Tracking ID: <strong>{{ blood_request.tracking_id }}</strong></p>
+    <dl class="summary">
+        <div><dt>Status</dt><dd><span class="status {{ blood_request.status }}">{{ blood_request.get_status_display }}</span></dd></div>
+        <div><dt>Quantity</dt><dd>{{ blood_request.quantity }} unit{{ blood_request.quantity|pluralize }}</dd></div>
+        <div><dt>Requester</dt><dd>{{ blood_request.requester_name }}</dd></div>
+        <div><dt>Hospital / facility</dt><dd>{{ blood_request.hospital_name }}</dd></div>
+        <div><dt>Submitted</dt><dd>{{ blood_request.created_at|date:"j M Y, H:i" }}</dd></div>
+        {% if blood_request.reviewed_at %}<div><dt>Reviewed</dt><dd>{{ blood_request.reviewed_at|date:"j M Y, H:i" }}</dd></div>{% endif %}
+    </dl>
+    <h2>Request purpose</h2>
+    <p>{{ blood_request.purpose|linebreaksbr }}</p>
+    {% if blood_request.review_note %}<h2>Review note</h2><p>{{ blood_request.review_note|linebreaksbr }}</p>{% endif %}
+    <div class="actions"><a class="button secondary" href="{% url 'requests:create' %}">Submit another request</a></div>
+</section>
+{% endblock %}
