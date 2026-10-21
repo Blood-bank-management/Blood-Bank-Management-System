@@ -26,6 +26,13 @@ class BloodRequestWorkflowTests(TestCase):
         )
         self.assertContains(self.client.get(response.url), 'Pending review')
 
+    def test_missing_request_fields_are_rejected(self):
+        response = self.client.post(reverse('requests:create'), {})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'This field is required.')
+        self.assertEqual(BloodRequest.objects.count(), 0)
+
     def test_quantity_must_be_positive(self):
         response = self.client.post(reverse('requests:create'), {**self.request_data, 'quantity': 0})
 
@@ -54,6 +61,34 @@ class BloodRequestWorkflowTests(TestCase):
         blood_request.refresh_from_db()
         self.assertEqual(blood_request.status, BloodRequest.Status.APPROVED)
         self.assertEqual(blood_request.reviewed_by, user)
+
+    def test_staff_can_approve_request(self):
+        blood_request = BloodRequest.objects.create(**self.request_data)
+        user = get_user_model().objects.create_user(username='approver', is_staff=True)
+        self.client.force_login(user)
+
+        self.client.post(
+            reverse('requests:review', kwargs={'tracking_id': blood_request.tracking_id}),
+            {'action': 'approved', 'review_note': 'Stock confirmed.'},
+        )
+
+        blood_request.refresh_from_db()
+        self.assertEqual(blood_request.status, BloodRequest.Status.APPROVED)
+        self.assertEqual(blood_request.reviewed_by, user)
+
+    def test_staff_can_reject_request_with_reason(self):
+        blood_request = BloodRequest.objects.create(**self.request_data)
+        user = get_user_model().objects.create_user(username='rejector', is_staff=True)
+        self.client.force_login(user)
+
+        self.client.post(
+            reverse('requests:review', kwargs={'tracking_id': blood_request.tracking_id}),
+            {'action': 'rejected', 'review_note': 'Required blood group is unavailable.'},
+        )
+
+        blood_request.refresh_from_db()
+        self.assertEqual(blood_request.status, BloodRequest.Status.REJECTED)
+        self.assertEqual(blood_request.review_note, 'Required blood group is unavailable.')
 
     def test_approved_request_issue_deducts_inventory_and_fulfills_request(self):
         blood_request = BloodRequest.objects.create(
@@ -110,3 +145,21 @@ class BloodRequestWorkflowTests(TestCase):
         approved_request.refresh_from_db()
         self.assertEqual(approved_request.status, BloodRequest.Status.APPROVED)
         self.assertEqual(BloodInventory.objects.get(pk=1).available_units, 2)
+
+    def test_issue_is_rejected_when_blood_group_is_unavailable(self):
+        blood_request = BloodRequest.objects.create(
+            **self.request_data,
+            status=BloodRequest.Status.APPROVED,
+        )
+        user = get_user_model().objects.create_user(username='unavailable-issuer', is_staff=True)
+        self.client.force_login(user)
+
+        response = self.client.post(
+            reverse('requests:issue', kwargs={'tracking_id': blood_request.tracking_id}),
+            {'issue_note': ''},
+        )
+
+        self.assertRedirects(response, reverse('requests:queue'))
+        blood_request.refresh_from_db()
+        self.assertEqual(blood_request.status, BloodRequest.Status.APPROVED)
+        self.assertEqual(BloodIssue.objects.count(), 0)
