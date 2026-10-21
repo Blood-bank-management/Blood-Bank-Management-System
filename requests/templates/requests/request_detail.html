@@ -12,6 +12,7 @@
         <div><dt>Hospital / facility</dt><dd>{{ blood_request.hospital_name }}</dd></div>
         <div><dt>Submitted</dt><dd>{{ blood_request.created_at|date:"j M Y, H:i" }}</dd></div>
         {% if blood_request.reviewed_at %}<div><dt>Reviewed</dt><dd>{{ blood_request.reviewed_at|date:"j M Y, H:i" }}</dd></div>{% endif %}
+        {% if blood_request.issue_transaction %}<div><dt>Issued</dt><dd>{{ blood_request.issue_transaction.quantity }} unit{{ blood_request.issue_transaction.quantity|pluralize }} on {{ blood_request.issue_transaction.issued_at|date:"j M Y, H:i" }}</dd></div>{% endif %}
     </dl>
     <h2>Request purpose</h2>
     <p>{{ blood_request.purpose|linebreaksbr }}</p>

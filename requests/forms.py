@@ -39,3 +39,11 @@ class ReviewForm(forms.Form):
         if cleaned_data.get('action') == BloodRequest.Status.REJECTED and not cleaned_data.get('review_note'):
             self.add_error('review_note', 'Add a reason when rejecting a request.')
         return cleaned_data
+
+
+class IssueForm(forms.Form):
+    issue_note = forms.CharField(
+        required=False,
+        max_length=500,
+        widget=forms.Textarea(attrs={'rows': 2}),
+    )

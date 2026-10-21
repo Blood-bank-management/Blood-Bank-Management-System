@@ -25,6 +25,15 @@
                     <div class="field"><label for="note-{{ blood_request.pk }}">Review note</label><textarea id="note-{{ blood_request.pk }}" name="review_note" rows="2" maxlength="500"></textarea></div>
                     <button class="button" type="submit">Save decision</button>
                 </form>
+            {% elif blood_request.status == 'approved' %}
+                <form class="review-form" method="post" action="{% url 'requests:issue' tracking_id=blood_request.tracking_id %}">
+                    {% csrf_token %}
+                    <p><strong>{{ blood_request.quantity }} unit{{ blood_request.quantity|pluralize }} of {{ blood_request.blood_group }}</strong> will be deducted from inventory.</p>
+                    <div class="field"><label for="issue-note-{{ blood_request.pk }}">Issue note</label><textarea id="issue-note-{{ blood_request.pk }}" name="issue_note" rows="2" maxlength="500"></textarea></div>
+                    <button class="button" type="submit">Issue blood</button>
+                </form>
+            {% elif blood_request.status == 'fulfilled' %}
+                <p class="muted">Issued {{ blood_request.issue_transaction.quantity }} unit{{ blood_request.issue_transaction.quantity|pluralize }} on {{ blood_request.issue_transaction.issued_at|date:"j M Y, H:i" }}.</p>
             {% else %}
                 <p class="muted">{{ blood_request.review_note|default:'No review note recorded.' }}</p>
             {% endif %}
