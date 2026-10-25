@@ -130,3 +130,13 @@ MAILERS = {
 
 # Redirect users to the availability page after login
 LOGIN_REDIRECT_URL = "/availability/"
+
+
+# BBMS-52: HTTPS security settings
+# These are enabled when DEBUG=False in the deployment environment.
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
