@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expired Blood Units</title>
+</head>
+<body>
+    <h1>Expired Blood Units</h1>
+
+    {% if expired_units %}
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>Blood Group</th>
+                    <th>Quantity</th>
+                    <th>Collection Date</th>
+                    <th>Expiry Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unit in expired_units %}
+                    <tr>
+                        <td>{{ unit.blood_group }}</td>
+                        <td>{{ unit.quantity }}</td>
+                        <td>{{ unit.collection_date }}</td>
+                        <td>{{ unit.expiry_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No expired blood units found.</p>
+    {% endif %}
+
+    <p><a href="/inventory-summary/">Back to Inventory Summary</a></p>
+</body>
+</html>

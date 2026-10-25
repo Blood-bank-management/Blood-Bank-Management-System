@@ -76,3 +76,16 @@ def inventory_summary(request):
         "inventory/inventory_summary.html",
         {"inventory": inventory},
     )
+
+
+@login_required
+def expired_units(request):
+    expired = BloodInventory.objects.filter(
+        expiry_date__lt=date.today()
+    )
+
+    return render(
+        request,
+        "inventory/expired_units.html",
+        {"expired_units": expired},
+    )
