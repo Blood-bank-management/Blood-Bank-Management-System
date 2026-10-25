@@ -1,12 +1,20 @@
+
 from datetime import date
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from .models import BloodInventory
 
 
+@login_required
 def availability_search(request):
     blood_group = request.GET.get("blood_group", "").strip()
 
-    valid_groups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+    valid_groups = [
+        "A+", "A-", "B+", "B-",
+        "AB+", "AB-", "O+", "O-"
+    ]
 
     result = None
     message = None
@@ -40,8 +48,12 @@ def availability_search(request):
     )
 
 
+@login_required
 def inventory_summary(request):
-    valid_groups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+    valid_groups = [
+        "A+", "A-", "B+", "B-",
+        "AB+", "AB-", "O+", "O-"
+    ]
 
     inventory = []
 
@@ -62,7 +74,5 @@ def inventory_summary(request):
     return render(
         request,
         "inventory/inventory_summary.html",
-        {
-            "inventory": inventory,
-        },
+        {"inventory": inventory},
     )

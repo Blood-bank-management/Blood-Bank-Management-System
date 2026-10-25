@@ -1,3 +1,4 @@
+
 """
 Django settings for bloodbank project.
 
@@ -126,3 +127,6 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Redirect users to the availability page after login
+LOGIN_REDIRECT_URL = "/availability/"
