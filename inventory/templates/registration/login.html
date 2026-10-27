@@ -23,7 +23,13 @@
 
         <p>
             <label for="id_password">Password:</label>
-            {{ form.password }}
+            <input
+                type="password"
+                name="password"
+                id="id_password"
+                required
+                autocomplete="current-password"
+            >
         </p>
 
         <button type="submit">Log in</button>
