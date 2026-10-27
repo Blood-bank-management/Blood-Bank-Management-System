@@ -2,9 +2,13 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .models import BloodInventory
+
+
+def home(request):
+    return redirect("availability_search")
 
 
 @login_required
