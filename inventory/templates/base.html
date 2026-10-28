@@ -19,19 +19,47 @@
         }
 
         nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background-color: #8B0000;
-            padding: 15px;
+            padding: 15px 25px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         nav a {
             color: white;
             text-decoration: none;
-            margin-right: 20px;
             font-weight: bold;
         }
 
         nav a:hover {
             text-decoration: underline;
+        }
+
+        .logout-form {
+            margin: 0;
+            margin-left: auto;
+        }
+
+        .logout-button {
+            background-color: white;
+            color: #8B0000;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #f0f0f0;
         }
 
         .container {
@@ -55,14 +83,25 @@
 
 <body>
     <nav>
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'availability_search' %}">Availability</a>
-        <a href="{% url 'inventory_summary' %}">Inventory Summary</a>
+        <div class="nav-left">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'availability_search' %}">Availability</a>
+            <a href="{% url 'inventory_summary' %}">Inventory Summary</a>
 
-        {% if user.is_authenticated %}
-            {% if user.is_staff %}
+            {% if user.is_authenticated and user.is_staff %}
                 <a href="/admin/">Admin</a>
             {% endif %}
+        </div>
+
+        {% if user.is_authenticated %}
+            <form method="post"
+                  action="{% url 'logout' %}"
+                  class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">
+                    Logout
+                </button>
+            </form>
         {% endif %}
     </nav>
 
