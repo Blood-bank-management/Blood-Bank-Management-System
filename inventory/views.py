@@ -4,11 +4,12 @@ from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from authentication.decorators import staff_required
 from .models import BloodInventory
 
 
 def home(request):
-    return redirect("availability_search")
+    return redirect("inventory:availability_search")
 
 
 @login_required
@@ -52,7 +53,7 @@ def availability_search(request):
     )
 
 
-@login_required
+@staff_required
 def inventory_summary(request):
     valid_groups = [
         "A+", "A-", "B+", "B-",
@@ -82,7 +83,7 @@ def inventory_summary(request):
     )
 
 
-@login_required
+@staff_required
 def expired_units(request):
     expired = BloodInventory.objects.filter(
         expiry_date__lt=date.today()

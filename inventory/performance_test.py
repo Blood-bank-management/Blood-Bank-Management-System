@@ -1,49 +1,61 @@
 
 import time
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.urls import reverse
 
 
 class AuthenticatedPagePerformanceTests(TestCase):
+    """
+    BBMS-53 performance smoke test.
+
+    inventory_summary is now staff-only (Sprint 2 RBAC fix: BBMS-F-011 names
+    "Blood Bank Staff" as the page's source/stakeholder, so a plain donor
+    account should never have reached it). The test user here is created
+    with is_staff=True to match, and the login page is measured with a
+    logged-out client since it is never behind authentication.
+    """
+
     def setUp(self):
-        user = User.objects.create_user(
+        self.staff_user = User.objects.create_user(
             username="perfuser",
-            password="perfpass123"
+            password="perfpass123",
+            is_staff=True,
         )
-        self.client.force_login(user)
 
     def test_common_pages_response_time(self):
-        pages = {
-            "Login": reverse("login"),
-            "Availability": reverse("availability_search"),
-            "Inventory summary": reverse("inventory_summary"),
-        }
-
         limit_seconds = 3.0
         requests_per_page = 20
 
-        for name, url in pages.items():
-            times = []
+        self._measure(
+            "Login", reverse("authentication:login"),
+            self.client, requests_per_page, limit_seconds,
+        )
 
-            for _ in range(requests_per_page):
-                start = time.perf_counter()
-                response = self.client.get(url)
-                elapsed = time.perf_counter() - start
+        self.client.force_login(self.staff_user)
+        staff_pages = {
+            "Availability": reverse("inventory:availability_search"),
+            "Inventory summary": reverse("inventory:inventory_summary"),
+        }
+        for name, url in staff_pages.items():
+            self._measure(name, url, self.client, requests_per_page, limit_seconds)
 
-                self.assertEqual(response.status_code, 200)
-                times.append(elapsed)
+    def _measure(self, name, url, client, requests_per_page, limit_seconds):
+        times = []
 
-            times.sort()
-            p90 = times[17]
+        for _ in range(requests_per_page):
+            start = time.perf_counter()
+            response = client.get(url)
+            elapsed = time.perf_counter() - start
 
-            print(
-                f"{name}: p90={p90:.4f}s "
-                f"(target <= {limit_seconds}s)"
-            )
+            self.assertEqual(response.status_code, 200)
+            times.append(elapsed)
 
-            self.assertLessEqual(
-                p90,
-                limit_seconds,
-                f"{name} exceeded the 3-second p90 target"
-            )
+        times.sort()
+        p90 = times[17]
+
+        print(f"{name}: p90={p90:.4f}s (target <= {limit_seconds}s)")
+
+        self.assertLessEqual(
+            p90, limit_seconds, f"{name} exceeded the 3-second p90 target"
+        )

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Blood Bank Management System{% endblock %}</title>
+<style>
+  :root {
+    --red-700: #9c1f2e;
+    --red-600: #b42337;
+    --red-500: #c7384a;
+    --red-050: #fdf1f1;
+    --ink-900: #1f2328;
+    --ink-600: #52585f;
+    --ink-400: #8a9099;
+    --line: #e4e2e0;
+    --surface: #ffffff;
+    --bg: #f7f5f3;
+    --green-bg: #e7f4ea; --green-ink: #1e6b36;
+    --amber-bg: #fdf1dd; --amber-ink: #8a5a06;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif;
+    color: var(--ink-900);
+    background: var(--bg);
+    min-height: 100vh;
+  }
+  a { color: var(--red-600); }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; color: var(--ink-900); line-height: 1.2; }
+  h1 { font-size: 1.9rem; margin: 0 0 .4rem; }
+  h2 { font-size: 1.3rem; margin: 1.6rem 0 .8rem; }
+  h3 { font-size: 1.05rem; margin: 1.2rem 0 .5rem; }
+  p.lead { color: var(--ink-600); margin-top: 0; }
+
+  header.site {
+    background: linear-gradient(135deg, var(--red-700), var(--red-500));
+    color: #fff;
+  }
+  .site-bar {
+    max-width: 1080px; margin: 0 auto; padding: 14px 28px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; }
+  .brand .mark {
+    width: 30px; height: 30px; border-radius: 50%; background: #fff;
+    color: var(--red-600); display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-family: Georgia, serif;
+  }
+  .brand strong { font-size: 1.05rem; letter-spacing: .01em; }
+  nav.site-nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  nav.site-nav a, nav.site-nav button.linklike {
+    color: rgba(255,255,255,.92); text-decoration: none; font-size: .92rem;
+    padding: 7px 12px; border-radius: 999px; font-weight: 600;
+    background: transparent; border: 0; cursor: pointer; font-family: inherit;
+  }
+  nav.site-nav a:hover, nav.site-nav button.linklike:hover { background: rgba(255,255,255,.16); }
+  .who { font-size: .85rem; color: rgba(255,255,255,.85); margin-right: 6px; }
+  form.logout-form { display: inline; }
+
+  main.page { max-width: 1080px; margin: 0 auto; padding: 34px 28px 60px; }
+  main.page.narrow { max-width: 540px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: clamp(20px, 4vw, 36px); box-shadow: 0 1px 2px rgba(20,10,10,.04);
+  }
+  .card + .card { margin-top: 20px; }
+
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-weight: 600; font-size: .88rem; margin-bottom: 5px; color: var(--ink-900); }
+  .field .hint { font-size: .8rem; color: var(--ink-400); margin-top: 4px; }
+  input, select, textarea {
+    width: 100%; font: inherit; padding: 10px 12px; border: 1px solid #cfc9c5;
+    border-radius: 7px; background: #fff; color: var(--ink-900);
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--red-500); outline-offset: 1px; border-color: var(--red-500); }
+  textarea { resize: vertical; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 0 16px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .errorlist, .errors { color: var(--red-700); font-size: .85rem; margin: 4px 0 0; padding: 0; list-style: none; }
+  .nonfield-errors { background: var(--red-050); border: 1px solid #f0c6cb; color: var(--red-700);
+    padding: 10px 14px; border-radius: 7px; margin-bottom: 16px; font-size: .9rem; }
+
+  .btn {
+    display: inline-block; border: 0; padding: 11px 20px; border-radius: 999px;
+    background: var(--red-600); color: #fff; font-weight: 700; font-size: .92rem;
+    cursor: pointer; text-decoration: none; font-family: inherit; line-height: 1.2;
+  }
+  .btn:hover { background: var(--red-700); }
+  .btn.secondary { background: #eee6e4; color: var(--ink-900); }
+  .btn.secondary:hover { background: #e3d8d5; }
+  .btn.small { padding: 7px 14px; font-size: .82rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+
+  table.data { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  table.data th, table.data td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line); }
+  table.data th { color: var(--ink-600); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+  table.data tr:last-child td { border-bottom: 0; }
+  table.data tbody tr:hover { background: var(--red-050); }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+  .badge.eligible, .badge.approved, .badge.fulfilled { background: var(--green-bg); color: var(--green-ink); }
+  .badge.temporarily_ineligible, .badge.pending { background: var(--amber-bg); color: var(--amber-ink); }
+  .badge.rejected { background: #fbe4e2; color: #942b31; }
+  .badge.staff { background: #e7eefb; color: #2b4f94; }
+  .badge.donor { background: #eee6e4; color: var(--ink-600); }
+
+  .notice { margin-bottom: 20px; padding: 13px 16px; border-radius: 7px; background: var(--red-050);
+    border-left: 4px solid var(--red-500); font-size: .92rem; }
+  .notice.success { background: var(--green-bg); border-left-color: #2e9450; color: var(--green-ink); }
+  .notice.info { background: #eaf1fb; border-left-color: #3b6fc4; color: #2b4f94; }
+
+  .pagination { display: flex; gap: 8px; margin-top: 20px; }
+  .muted { color: var(--ink-400); }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--ink-400); }
+</style>
+</head>
+<body>
+  <header class="site">
+    <div class="site-bar">
+      <a class="brand" href="{% url 'authentication:home' %}">
+        <span class="mark">B+</span>
+        <strong>Blood Bank Management System</strong>
+      </a>
+      <nav class="site-nav">
+        {% if user.is_authenticated %}
+          <a href="{% url 'inventory:availability_search' %}">Availability</a>
+          <a href="{% url 'requests:create' %}">Request blood</a>
+          {% if not user.is_staff %}<a href="{% url 'donors:profile' %}">My profile</a>{% endif %}
+          {% if user.is_staff %}
+            <a href="{% url 'donors:list' %}">Donors</a>
+            <a href="{% url 'requests:queue' %}">Request queue</a>
+            <a href="{% url 'inventory:inventory_summary' %}">Inventory</a>
+          {% endif %}
+          {% if user.is_superuser %}<a href="/admin/">Admin</a>{% endif %}
+          <span class="who">{{ user.get_username }}</span>
+          <form class="logout-form" method="post" action="{% url 'authentication:logout' %}">
+            {% csrf_token %}
+            <button class="linklike" type="submit">Log out</button>
+          </form>
+        {% else %}
+          <a href="{% url 'inventory:availability_search' %}">Availability</a>
+          <a href="{% url 'requests:create' %}">Request blood</a>
+          <a href="{% url 'donors:register' %}">Register as donor</a>
+          <a href="{% url 'authentication:login' %}">Log in</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="page{% block main_class %}{% endblock %}">
+    {% for message in messages %}
+      <div class="notice {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
