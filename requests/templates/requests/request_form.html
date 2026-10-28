@@ -1,23 +1,22 @@
-{% extends 'requests/base.html' %}
-{% block title %}Submit a blood request{% endblock %}
+{% extends "base.html" %}
+{% block title %}Request Blood - Blood Bank Management System{% endblock %}
+{% block main_class %} narrow{% endblock %}
 {% block content %}
-<section class="panel">
-    <p class="muted">Blood request management</p>
+<section class="card">
+    <p class="lead">Blood request</p>
     <h1>Request blood</h1>
-    <p class="intro">Submit the requirement below. Your tracking link will be available immediately after submission.</p>
+    <p class="muted">Submit the requirement below. Your tracking link will be available immediately after submission.</p>
     <form method="post" novalidate>
         {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class="grid">
-            {% for field in form %}
-                <div class="field{% if field.name == 'purpose' %} full{% endif %}">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {{ field.errors }}
-                </div>
-            {% endfor %}
-        </div>
-        <div class="actions"><button class="button" type="submit">Submit request</button></div>
+        {% if form.non_field_errors %}<div class="nonfield-errors">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+        <div class="actions"><button class="btn" type="submit">Submit request</button></div>
     </form>
 </section>
 {% endblock %}

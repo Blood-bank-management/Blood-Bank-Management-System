@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Blood Bank Management System{% endblock %}
+
+{% block content %}
+<section class="card">
+  <p class="lead">Signed in as</p>
+  <h1>{{ user.get_username }}</h1>
+  {% if user.is_superuser %}
+    <span class="badge staff">Administrator</span>
+  {% elif user.is_staff %}
+    <span class="badge staff">Blood bank staff</span>
+  {% else %}
+    <span class="badge donor">Donor</span>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Quick links</h2>
+  <div class="actions">
+    <a class="btn secondary" href="{% url 'inventory:availability_search' %}">Check blood availability</a>
+    <a class="btn secondary" href="{% url 'requests:create' %}">Submit a blood request</a>
+    {% if user.is_staff %}
+      <a class="btn secondary" href="{% url 'donors:list' %}">Donor records</a>
+      <a class="btn secondary" href="{% url 'requests:queue' %}">Request queue</a>
+      <a class="btn secondary" href="{% url 'inventory:inventory_summary' %}">Inventory summary</a>
+    {% else %}
+      <a class="btn secondary" href="{% url 'donors:profile' %}">My donor profile</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

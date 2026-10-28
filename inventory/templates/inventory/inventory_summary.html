@@ -1,24 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}Inventory Summary{% endblock %}
+{% block title %}Inventory Summary - Blood Bank Management System{% endblock %}
 
 {% block content %}
-
-<h1>Blood Inventory Summary</h1>
-
-<table border="1" cellpadding="10" cellspacing="0">
-    <tr>
-        <th>Blood Group</th>
-        <th>Available Units</th>
-    </tr>
-
-    {% for item in inventory %}
-    <tr>
-        <td>{{ item.blood_group }}</td>
-        <td>{{ item.quantity }}</td>
-    </tr>
-    {% endfor %}
-
-</table>
-
+<section class="card">
+    <p class="lead">Blood bank staff</p>
+    <h1>Blood inventory summary</h1>
+    <table class="data">
+        <tr><th>Blood group</th><th>Available units</th></tr>
+        {% for item in inventory %}
+        <tr>
+            <td>{{ item.blood_group }}</td>
+            <td>{{ item.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="actions">
+        <a class="btn secondary small" href="{% url 'inventory:expired_units' %}">View expired units</a>
+    </div>
+</section>
 {% endblock %}

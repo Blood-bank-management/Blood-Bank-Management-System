@@ -1,22 +1,20 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expired Blood Units</title>
-</head>
-<body>
-    <h1>Expired Blood Units</h1>
+{% block title %}Expired Blood Units - Blood Bank Management System{% endblock %}
+
+{% block content %}
+<section class="card">
+    <p class="lead">Blood bank staff</p>
+    <h1>Expired blood units</h1>
 
     {% if expired_units %}
-        <table border="1" cellpadding="8">
+        <table class="data">
             <thead>
                 <tr>
-                    <th>Blood Group</th>
+                    <th>Blood group</th>
                     <th>Quantity</th>
-                    <th>Collection Date</th>
-                    <th>Expiry Date</th>
+                    <th>Collection date</th>
+                    <th>Expiry date</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,9 +29,11 @@
             </tbody>
         </table>
     {% else %}
-        <p>No expired blood units found.</p>
+        <p class="empty-state">No expired blood units found.</p>
     {% endif %}
 
-    <p><a href="/inventory-summary/">Back to Inventory Summary</a></p>
-</body>
-</html>
+    <div class="actions">
+        <a class="btn secondary small" href="{% url 'inventory:inventory_summary' %}">Back to inventory summary</a>
+    </div>
+</section>
+{% endblock %}

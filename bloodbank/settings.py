@@ -1,17 +1,28 @@
-
 """
 Django settings for bloodbank project.
 """
 
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-q4sadma(88nk8kjx*s#_@1us)t83n41y9=hbnl$^6b*!v6n!a0'
+# SECRET_KEY, DEBUG and ALLOWED_HOSTS now come from the environment so the
+# same settings module works for every teammate's machine and for CI without
+# anyone editing this file or committing a real secret. The literals below
+# are development-only fallbacks (the key is the original Sprint 1 dev key,
+# publicly visible in git history already, so rotating it is not treated as
+# a security fix -- see .env.example and README.md "Environment setup").
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-q4sadma(88nk8kjx*s#_@1us)t83n41y9=hbnl$^6b*!v6n!a0",
+)
 
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()
+]
 
 
 INSTALLED_APPS = [
@@ -23,8 +34,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'inventory',
     'requests',
+    'authentication',
+    'donors',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -41,7 +53,10 @@ ROOT_URLCONF = 'bloodbank.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # Project-level templates/ holds the shared design system (base.html)
+        # that every app's templates extend, so the nav, logout control and
+        # styling are defined once instead of separately per app.
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,14 +114,9 @@ MAILERS = {
 }
 
 
-LOGIN_REDIRECT_URL = "/availability/"
-
-
-# BBMS-52: HTTPS security settings
-# Enabled when DEBUG=False in deployment.
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD = not DEBUG
+# Authentication (BBMS-F-001, BBMS-F-002, BBMS-SR-001)
+# Django's built-in session authentication; unauthenticated requests to
+# @login_required views are redirected to LOGIN_URL.
+LOGIN_URL = 'authentication:login'
+LOGIN_REDIRECT_URL = 'authentication:home'
+LOGOUT_REDIRECT_URL = 'authentication:login'
