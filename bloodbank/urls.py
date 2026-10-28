@@ -1,17 +1,27 @@
 
 from django.contrib import admin
-from django.urls import path, include
-from django.contrib.auth import views as auth_views
+from django.urls import include, path
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # Inventory management
     path("", include("inventory.urls")),
+
+    # Blood requests and distribution
     path("requests/", include("requests.urls")),
+
+    # Redirect the root URL to the authentication login page
     path(
-        "accounts/login/",
-        auth_views.LoginView.as_view(
-            template_name="registration/login.html"
+        "",
+        RedirectView.as_view(
+            pattern_name="authentication:login",
+            permanent=False,
         ),
-        name="login",
+        name="index",
     ),
+
+    # Login, logout, and authenticated home page
+    path("", include("authentication.urls")),
 ]

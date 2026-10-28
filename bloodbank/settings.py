@@ -1,4 +1,3 @@
-
 """
 Django settings for bloodbank project.
 """
@@ -23,8 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'inventory',
     'requests',
+    'authentication',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -99,14 +98,9 @@ MAILERS = {
 }
 
 
-LOGIN_REDIRECT_URL = "/availability/"
-
-
-# BBMS-52: HTTPS security settings
-# Enabled when DEBUG=False in deployment.
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD = not DEBUG
+# Authentication (BBMS-F-001, BBMS-F-002, BBMS-SR-001)
+# Django's built-in session authentication; unauthenticated requests to
+# @login_required views are redirected to LOGIN_URL.
+LOGIN_URL = 'authentication:login'
+LOGIN_REDIRECT_URL = 'authentication:home'
+LOGOUT_REDIRECT_URL = 'authentication:login'

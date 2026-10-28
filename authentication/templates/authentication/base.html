@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Blood Bank Management System{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f6f6f7; margin: 0; }
+    main { max-width: 26rem; margin: 4rem auto; padding: 2rem; background: #fff;
+           border: 1px solid #ddd; border-radius: 8px; }
+    h1 { margin-top: 0; font-size: 1.4rem; }
+    .field { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: .25rem; font-weight: 600; }
+    input[type=text], input[type=password] { width: 100%; padding: .5rem; box-sizing: border-box; }
+    button { padding: .5rem 1rem; cursor: pointer; }
+    .errors { color: #b00020; margin: .25rem 0; }
+    .errors ul { margin: 0; padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
