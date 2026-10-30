@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Inventory Summary{% endblock %}
@@ -15,7 +16,21 @@
     {% for item in inventory %}
     <tr>
         <td>{{ item.blood_group }}</td>
-        <td>{{ item.quantity }}</td>
+        <td>
+            {% if item.quantity == 0 %}
+                <span style="color: red; font-weight: bold;">
+                    {{ item.quantity }}
+                </span>
+            {% elif item.quantity <= 5 %}
+                <span style="color: orange; font-weight: bold;">
+                    {{ item.quantity }}
+                </span>
+            {% else %}
+                <span style="color: green; font-weight: bold;">
+                    {{ item.quantity }}
+                </span>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 
