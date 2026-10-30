@@ -120,3 +120,17 @@ MAILERS = {
 LOGIN_URL = 'authentication:login'
 LOGIN_REDIRECT_URL = 'authentication:home'
 LOGOUT_REDIRECT_URL = 'authentication:login'
+
+
+# BBMS-52 / BBMS-SR-003: HTTPS security settings, enabled when DEBUG=False
+# in the deployment environment. Restored here -- these were added to main
+# in e61fdc6 ("Add HTTPS security settings") but did not survive the
+# Sprint 2 donor-management merge (PR #10), which replaced this file
+# wholesale with a version branched before e61fdc6 existed. See
+# docs/KNOWN_ISSUES.md for how that happened.
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
