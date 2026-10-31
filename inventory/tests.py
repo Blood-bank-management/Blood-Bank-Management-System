@@ -151,7 +151,7 @@ class BloodInventoryTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Available: 2 units")
 
-    # PRELIMINARY INVENTORY INTEGRITY TEST
+    # INVENTORY INTEGRITY TEST
 
     def test_inventory_quantities_are_non_negative(self):
         blood_groups = [
@@ -168,3 +168,40 @@ class BloodInventoryTests(TestCase):
             )
 
             self.assertGreaterEqual(total, 0)
+
+    # ADDITIONAL INTEGRATION TESTS - BBMS-38
+
+    def test_inventory_summary_displays_all_blood_groups(self):
+        response = self.client.get("/inventory-summary/")
+
+        self.assertEqual(response.status_code, 200)
+
+        for group in ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]:
+            self.assertContains(response, group)
+
+    def test_search_adds_quantities_from_multiple_batches(self):
+        for quantity in [3, 5]:
+            BloodInventory.objects.create(
+                blood_group="O+",
+                quantity=quantity,
+                collection_date=date.today(),
+                expiry_date=date.today() + timedelta(days=30),
+            )
+
+        response = self.client.get(
+            "/availability/",
+            {"blood_group": "O+"}
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "8")
+
+    def test_availability_search_requires_login(self):
+        self.client.logout()
+
+        response = self.client.get(
+            "/availability/",
+            {"blood_group": "O+"}
+        )
+
+        self.assertEqual(response.status_code, 302)
