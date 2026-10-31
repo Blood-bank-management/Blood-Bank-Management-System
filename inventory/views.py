@@ -2,6 +2,7 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 
 from .models import BloodInventory
@@ -30,13 +31,10 @@ def availability_search(request):
         message = "Unsupported blood group."
 
     else:
-        result = sum(
-            item.quantity
-            for item in BloodInventory.objects.filter(
-                blood_group=blood_group,
-                expiry_date__gte=date.today()
-            )
-        )
+        result = BloodInventory.objects.filter(
+            blood_group=blood_group,
+            expiry_date__gte=date.today()
+        ).aggregate(total=Sum("quantity"))["total"] or 0
 
         if result == 0:
             message = "No blood available for this blood group."
@@ -62,13 +60,10 @@ def inventory_summary(request):
     inventory = []
 
     for group in valid_groups:
-        total = sum(
-            item.quantity
-            for item in BloodInventory.objects.filter(
-                blood_group=group,
-                expiry_date__gte=date.today()
-            )
-        )
+        total = BloodInventory.objects.filter(
+            blood_group=group,
+            expiry_date__gte=date.today()
+        ).aggregate(total=Sum("quantity"))["total"] or 0
 
         inventory.append({
             "blood_group": group,
