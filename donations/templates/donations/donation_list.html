@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Donations - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Donation management</p>
+  <h1>Donation records</h1>
+  <form method="get" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:20px;">
+    <div class="field" style="margin-bottom:0;">
+      <label>Donor username</label>
+      <input type="text" name="donor" value="{{ donor_username }}">
+    </div>
+    <div class="field" style="margin-bottom:0;">
+      <label>Blood group</label>
+      <select name="blood_group">
+        <option value="">All</option>
+        {% for g in blood_groups %}<option value="{{ g }}" {% if g == blood_group %}selected{% endif %}>{{ g }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:0;">
+      <label>Status</label>
+      <select name="status">
+        <option value="">All</option>
+        {% for value, label in status_choices %}<option value="{{ value }}" {% if value == status %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <button class="btn" type="submit">Filter</button>
+  </form>
+
+  {% if page_obj.object_list %}
+  <table class="data">
+    <thead><tr><th>Reference</th><th>Donor</th><th>Blood group</th><th>Units</th><th>Collected</th><th>Status</th><th>Recorded by</th></tr></thead>
+    <tbody>
+      {% for donation in page_obj %}
+      <tr>
+        <td>{{ donation.collection_reference }}</td>
+        <td>{{ donation.donor.user.username }}</td>
+        <td>{{ donation.blood_group }}</td>
+        <td>{{ donation.quantity }}</td>
+        <td>{{ donation.collection_date }}</td>
+        <td><span class="badge {{ donation.status }}">{{ donation.get_status_display }}</span></td>
+        <td>{{ donation.recorded_by.get_username }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <nav class="pagination">
+    {% if page_obj.has_previous %}<a class="btn small secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+    <span class="muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a class="btn small secondary" href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+  </nav>
+  {% else %}
+  <p class="empty-state">No donation records match these filters.</p>
+  {% endif %}
+</section>
+{% endblock %}

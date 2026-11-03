@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Summary - Blood Bank Management System{% endblock %}
+
+{% block content %}
+<section class="card">
+    <p class="lead">Blood bank staff</p>
+    <h1>Blood inventory summary</h1>
+    <table class="data">
+        <tr><th>Blood group</th><th>Available units</th><th>Batches</th><th>Expiring within 7 days</th></tr>
+        {% for item in inventory %}
+        <tr>
+            <td>{{ item.blood_group }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.batch_count }}</td>
+            <td>{% if item.expiring_soon %}<span class="badge pending">{{ item.expiring_soon }}</span>{% else %}0{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="actions">
+        <a class="btn secondary small" href="{% url 'inventory:batch_list' %}">View all batches</a>
+        <a class="btn secondary small" href="{% url 'inventory:expired_units' %}">View expired units</a>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Recent inventory transactions</h2>
+    {% if recent_transactions %}
+    <table class="data">
+        <tr><th>When</th><th>Type</th><th>Batch</th><th>Change</th><th>Balance after</th><th>By</th><th>Reason</th></tr>
+        {% for t in recent_transactions %}
+        <tr>
+            <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
+            <td>{{ t.get_transaction_type_display }}</td>
+            <td><a href="{% url 'inventory:batch_detail' pk=t.batch_id %}">#{{ t.batch_id }}</a></td>
+            <td>{{ t.quantity_delta }}</td>
+            <td>{{ t.balance_after }}</td>
+            <td>{{ t.performed_by.get_username|default:"-" }}</td>
+            <td>{{ t.reason }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="empty-state">No inventory transactions recorded yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

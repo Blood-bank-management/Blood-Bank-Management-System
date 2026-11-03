@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Request Queue - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+    <p class="lead">Staff workspace</p>
+    <h1>Blood request queue</h1>
+    <p class="muted">Review pending requests and update their status. Requesters can track changes with their tracking ID.</p>
+
+    <form method="get" style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin:18px 0;">
+        <div class="field" style="margin-bottom:0;">
+            <label>Status</label>
+            <select name="status">
+                <option value="">All</option>
+                {% for value, label in status_choices %}<option value="{{ value }}" {% if value == status %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+            <label>Blood group</label>
+            <select name="blood_group">
+                <option value="">All</option>
+                {% for g in blood_groups %}<option value="{{ g }}" {% if g == blood_group %}selected{% endif %}>{{ g }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+            <label>Hospital</label>
+            <input type="text" name="hospital" value="{{ hospital }}">
+        </div>
+        <button class="btn small" type="submit">Filter</button>
+    </form>
+
+    {% for blood_request in requests %}
+        <div class="card" style="margin-top:16px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap;">
+                <div>
+                    <strong>{{ blood_request.blood_group }} / {{ blood_request.quantity }} unit{{ blood_request.quantity|pluralize }}</strong>
+                    <div class="muted">{{ blood_request.hospital_name }} &middot; {{ blood_request.requester_name }}</div>
+                    <div class="muted">{{ blood_request.created_at|date:"j M Y, H:i" }} &middot; {{ blood_request.tracking_id }}</div>
+                </div>
+                <span class="badge {{ blood_request.status }}">{{ blood_request.get_status_display }}</span>
+            </div>
+            {% if blood_request.status == 'pending' %}
+                <form method="post" action="{% url 'requests:review' tracking_id=blood_request.tracking_id %}" style="margin-top:14px;">
+                    {% csrf_token %}
+                    <div style="display:flex; gap:16px; margin-bottom:10px;">
+                        <label style="font-weight:normal; display:flex; gap:6px; align-items:center;"><input style="width:auto;" type="radio" name="action" value="approved" required> Approve</label>
+                        <label style="font-weight:normal; display:flex; gap:6px; align-items:center;"><input style="width:auto;" type="radio" name="action" value="rejected"> Reject</label>
+                    </div>
+                    <div class="field"><label for="note-{{ blood_request.pk }}">Review note</label><textarea id="note-{{ blood_request.pk }}" name="review_note" rows="2" maxlength="500"></textarea></div>
+                    <button class="btn small" type="submit">Save decision</button>
+                </form>
+            {% elif blood_request.status == 'approved' %}
+                <form method="post" action="{% url 'requests:issue' tracking_id=blood_request.tracking_id %}" style="margin-top:14px;">
+                    {% csrf_token %}
+                    <p class="muted"><strong>{{ blood_request.quantity }} unit{{ blood_request.quantity|pluralize }} of {{ blood_request.blood_group }}</strong> will be deducted from inventory.</p>
+                    <div class="field"><label for="issue-note-{{ blood_request.pk }}">Issue note</label><textarea id="issue-note-{{ blood_request.pk }}" name="issue_note" rows="2" maxlength="500"></textarea></div>
+                    <button class="btn small" type="submit">Issue blood</button>
+                </form>
+            {% elif blood_request.status == 'fulfilled' %}
+                <p class="muted" style="margin-top:14px;">Issued {{ blood_request.issue_transaction.quantity }} unit{{ blood_request.issue_transaction.quantity|pluralize }} on {{ blood_request.issue_transaction.issued_at|date:"j M Y, H:i" }}.</p>
+            {% else %}
+                <p class="muted" style="margin-top:14px;">{{ blood_request.review_note|default:'No review note recorded.' }}</p>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p class="empty-state">No blood requests match these filters.</p>
+    {% endfor %}
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="pagination">
+        {% if page_obj.has_previous %}<a class="btn small secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+        <span class="muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a class="btn small secondary" href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+    </nav>
+    {% endif %}
+</section>
+{% endblock %}

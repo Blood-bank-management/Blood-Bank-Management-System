@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Donors - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Staff workspace</p>
+  <h1>Registered donors</h1>
+
+  <form method="get" style="display:flex; gap:10px; margin:18px 0;">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name, username, e-mail or blood group" style="max-width:360px;">
+    <button class="btn secondary small" type="submit">Search</button>
+  </form>
+
+  {% if page_obj.object_list %}
+    <table class="data">
+      <tr><th>Username</th><th>Name</th><th>Blood group</th><th>Eligibility</th><th></th></tr>
+      {% for donor in page_obj %}
+        <tr>
+          <td>{{ donor.user.username }}</td>
+          <td>{{ donor.user.get_full_name|default:"-" }}</td>
+          <td>{{ donor.blood_group }}</td>
+          <td><span class="badge {{ donor.eligibility_status }}">{{ donor.get_eligibility_status_display }}</span></td>
+          <td><a class="btn secondary small" href="{% url 'donors:detail' pk=donor.pk %}">View</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+    <div class="pagination">
+      {% if page_obj.has_previous %}<a class="btn secondary small" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>{% endif %}
+      <span class="muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a class="btn secondary small" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>{% endif %}
+    </div>
+  {% else %}
+    <p class="empty-state">No donors match that search.</p>
+  {% endif %}
+</section>
+{% endblock %}

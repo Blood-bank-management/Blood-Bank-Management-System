@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Expired Blood Units - Blood Bank Management System{% endblock %}
+
+{% block content %}
+<section class="card">
+    <p class="lead">Blood bank staff</p>
+    <h1>Expired blood units</h1>
+
+    {% if expired_units %}
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>Blood group</th>
+                    <th>Quantity</th>
+                    <th>Collection date</th>
+                    <th>Expiry date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unit in expired_units %}
+                    <tr>
+                        <td>{{ unit.blood_group }}</td>
+                        <td>{{ unit.quantity }}</td>
+                        <td>{{ unit.collection_date }}</td>
+                        <td>{{ unit.expiry_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty-state">No expired blood units found.</p>
+    {% endif %}
+
+    <div class="actions">
+        <a class="btn secondary small" href="{% url 'inventory:inventory_summary' %}">Back to inventory summary</a>
+    </div>
+</section>
+{% endblock %}

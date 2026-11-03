@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ donor_profile.user.username }} - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Staff workspace</p>
+  <h1>{{ donor_profile.user.get_full_name|default:donor_profile.user.username }}</h1>
+  <table class="data">
+    <tr><th>Username</th><td>{{ donor_profile.user.username }}</td></tr>
+    <tr><th>E-mail</th><td>{{ donor_profile.user.email }}</td></tr>
+    <tr><th>Phone</th><td>{{ donor_profile.phone_number }}</td></tr>
+    <tr><th>Date of birth</th><td>{{ donor_profile.date_of_birth }}</td></tr>
+    <tr><th>Blood group</th><td>{{ donor_profile.blood_group }}</td></tr>
+    <tr><th>Address</th><td>{{ donor_profile.address|linebreaksbr }}</td></tr>
+    <tr><th>Registered</th><td>{{ donor_profile.created_at|date:"j M Y" }}</td></tr>
+  </table>
+</section>
+
+<section class="card">
+  <h2>Eligibility</h2>
+  <p>
+    Current status:
+    <span class="badge {{ donor_profile.eligibility_status }}">{{ donor_profile.get_eligibility_status_display }}</span>
+    {% if donor_profile.eligibility_updated_by %}
+      <span class="muted">&nbsp;&middot; last changed by {{ donor_profile.eligibility_updated_by.get_username }} on {{ donor_profile.eligibility_updated_at|date:"j M Y, H:i" }}</span>
+    {% endif %}
+  </p>
+  {% if donor_profile.eligibility_note %}<p class="muted">Note: {{ donor_profile.eligibility_note }}</p>{% endif %}
+
+  <form method="post" style="margin-top:16px;">
+    {% csrf_token %}
+    <div class="field">
+      <label for="{{ form.eligibility_status.id_for_label }}">Update eligibility status</label>
+      {{ form.eligibility_status }}
+      {{ form.eligibility_status.errors }}
+    </div>
+    <div class="field">
+      <label for="{{ form.note.id_for_label }}">Reason (optional)</label>
+      {{ form.note }}
+      {{ form.note.errors }}
+    </div>
+    <div class="actions"><button class="btn small" type="submit">Update eligibility</button></div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Blood Bank Management System{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <p class="eyebrow">Signed in as {{ user.get_username }}</p>
+  <h1>
+    {% if is_staff_dashboard %}Operations dashboard{% else %}Your dashboard{% endif %}
+    {% if user.is_superuser %}<span class="badge staff">Administrator</span>
+    {% elif user.is_staff %}<span class="badge staff">Blood bank staff</span>
+    {% else %}<span class="badge donor">Donor</span>{% endif %}
+  </h1>
+</header>
+
+{% if is_staff_dashboard %}
+<section class="metric-grid">
+  <div class="metric-card">
+    <p class="metric-label">Available units</p>
+    <p class="metric-value">{{ total_available_units }}</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Pending requests</p>
+    <p class="metric-value">{{ pending_requests }}</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Approved requests</p>
+    <p class="metric-value">{{ approved_requests }}</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Expiring within 7 days</p>
+    <p class="metric-value">{{ expiring_batches|length }}</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Blood group distribution</h2>
+  <div class="bar-chart">
+    {% for row in blood_group_distribution %}
+    <div class="bar-row">
+      <span class="bar-label">{{ row.blood_group }}</span>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: {% widthratio row.units max_units 100 %}%;"></div>
+      </div>
+      <span class="bar-value">{{ row.units }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<div class="grid-2-cards">
+  <section class="card">
+    <h2>Recent donations</h2>
+    {% if recent_donations %}
+    <table class="data compact">
+      <tr><th>Donor</th><th>Group</th><th>Units</th><th>Status</th></tr>
+      {% for d in recent_donations %}
+      <tr>
+        <td>{{ d.donor.user.username }}</td>
+        <td>{{ d.blood_group }}</td>
+        <td>{{ d.quantity }}</td>
+        <td><span class="badge {{ d.status }}">{{ d.get_status_display }}</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}<p class="empty-state">No donations recorded yet.</p>{% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Recent issues</h2>
+    {% if recent_issues %}
+    <table class="data compact">
+      <tr><th>Hospital</th><th>Group</th><th>Units</th><th>By</th></tr>
+      {% for i in recent_issues %}
+      <tr>
+        <td>{{ i.request.hospital_name }}</td>
+        <td>{{ i.blood_group }}</td>
+        <td>{{ i.quantity }}</td>
+        <td>{{ i.issued_by.get_username }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}<p class="empty-state">No blood issued yet.</p>{% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Expiring soon</h2>
+    {% if expiring_batches %}
+    <table class="data compact">
+      <tr><th>Batch</th><th>Group</th><th>Units</th><th>Expires</th></tr>
+      {% for b in expiring_batches %}
+      <tr>
+        <td><a href="{% url 'inventory:batch_detail' pk=b.pk %}">#{{ b.pk }}</a></td>
+        <td>{{ b.blood_group }}</td>
+        <td>{{ b.quantity_remaining }}</td>
+        <td>{{ b.expiry_date }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}<p class="empty-state">Nothing expiring in the next 7 days.</p>{% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Recent audit activity</h2>
+    {% if recent_audit_entries %}
+    <table class="data compact">
+      <tr><th>Action</th><th>Entity</th><th>By</th></tr>
+      {% for a in recent_audit_entries %}
+      <tr>
+        <td>{{ a.get_action_display }}</td>
+        <td>{{ a.entity_type }}#{{ a.entity_id }}</td>
+        <td>{{ a.actor.get_username|default:"system" }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}<p class="empty-state">No activity recorded yet.</p>{% endif %}
+  </section>
+</div>
+
+<section class="card">
+  <h2>Quick actions</h2>
+  <div class="actions">
+    <a class="btn secondary" href="{% url 'donations:record' %}">Record a donation</a>
+    <a class="btn secondary" href="{% url 'requests:queue' %}">Review request queue</a>
+    <a class="btn secondary" href="{% url 'inventory:batch_list' %}">View inventory batches</a>
+    <a class="btn secondary" href="{% url 'donors:list' %}">Donor directory</a>
+  </div>
+</section>
+
+{% else %}
+{% if donor_profile %}
+<section class="metric-grid">
+  <div class="metric-card">
+    <p class="metric-label">Blood group</p>
+    <p class="metric-value">{{ donor_profile.blood_group }}</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Eligibility</p>
+    <p class="metric-value" style="font-size:1.1rem;">
+      <span class="badge {{ donor_profile.eligibility_status }}">{{ donor_profile.get_eligibility_status_display }}</span>
+    </p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Donations recorded</p>
+    <p class="metric-value">{{ donation_count }}</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Next eligible from</p>
+    <p class="metric-value" style="font-size:1.1rem;">{{ next_eligible_date|default:"Now" }}</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Your recent donations</h2>
+  {% if recent_donations %}
+  <table class="data">
+    <tr><th>Date</th><th>Group</th><th>Units</th><th>Status</th></tr>
+    {% for d in recent_donations %}
+    <tr>
+      <td>{{ d.collection_date }}</td>
+      <td>{{ d.blood_group }}</td>
+      <td>{{ d.quantity }}</td>
+      <td><span class="badge {{ d.status }}">{{ d.get_status_display }}</span></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="empty-state">You have no recorded donations yet.</p>{% endif %}
+</section>
+
+<section class="card">
+  <h2>Quick actions</h2>
+  <div class="actions">
+    <a class="btn secondary" href="{% url 'donors:profile' %}">My profile</a>
+    <a class="btn secondary" href="{% url 'donations:my_history' %}">My donation history</a>
+    <a class="btn secondary" href="{% url 'inventory:availability_search' %}">Check blood availability</a>
+    <a class="btn secondary" href="{% url 'requests:create' %}">Submit a blood request</a>
+  </div>
+</section>
+{% else %}
+<section class="card">
+  <p class="lead">Your account does not have a donor profile.</p>
+  <div class="actions">
+    <a class="btn secondary" href="{% url 'inventory:availability_search' %}">Check blood availability</a>
+    <a class="btn secondary" href="{% url 'requests:create' %}">Submit a blood request</a>
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

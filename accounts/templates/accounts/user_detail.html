@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ target_user.username }} - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Administrator</p>
+  <h1>{{ target_user.username }}</h1>
+  <p class="muted">
+    Role: <strong>{{ current_role }}</strong> &middot;
+    Status: {% if target_user.is_active %}<span class="badge eligible">Active</span>{% else %}<span class="badge rejected">Inactive</span>{% endif %}
+  </p>
+</section>
+
+<section class="card">
+  <h2>Account details</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="update_details">
+    {% for field in update_form %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+    <button class="btn" type="submit">Save details</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Role</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="change_role">
+    <div class="field">
+      {{ role_form.role.label_tag }}
+      {{ role_form.role }}
+    </div>
+    <button class="btn" type="submit">Change role</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Activation</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="toggle_active">
+    <button class="btn {% if target_user.is_active %}secondary{% endif %}" type="submit">
+      {% if target_user.is_active %}Deactivate account{% else %}Activate account{% endif %}
+    </button>
+  </form>
+</section>
+{% endblock %}

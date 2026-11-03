@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}User management - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Administrator</p>
+  <h1>User management</h1>
+  <form method="get" style="display:flex; gap:12px; align-items:flex-end; margin-bottom:20px; flex-wrap:wrap;">
+    <div class="field" style="margin-bottom:0;">{{ form.q.label_tag }}{{ form.q }}</div>
+    <div class="field" style="margin-bottom:0;">{{ form.role.label_tag }}{{ form.role }}</div>
+    <div class="field" style="margin-bottom:0;">{{ form.status.label_tag }}{{ form.status }}</div>
+    <button class="btn" type="submit">Filter</button>
+    <a class="btn secondary" href="{% url 'accounts:create' %}">New account</a>
+  </form>
+  {% if page_obj.object_list %}
+  <table class="data">
+    <thead><tr><th>Username</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for u in page_obj %}
+      <tr>
+        <td><a href="{% url 'accounts:detail' pk=u.pk %}">{{ u.username }}</a></td>
+        <td>{{ u.get_full_name }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          {% if u.is_superuser %}<span class="badge staff">Administrator</span>
+          {% elif u.is_staff %}<span class="badge staff">Staff</span>
+          {% else %}<span class="badge donor">Donor</span>{% endif %}
+        </td>
+        <td>{% if u.is_active %}<span class="badge eligible">Active</span>{% else %}<span class="badge rejected">Inactive</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <nav class="pagination">
+    {% if page_obj.has_previous %}<a class="btn small secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+    <span class="muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a class="btn small secondary" href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+  </nav>
+  {% else %}
+  <p class="empty-state">No accounts match these filters.</p>
+  {% endif %}
+</section>
+{% endblock %}

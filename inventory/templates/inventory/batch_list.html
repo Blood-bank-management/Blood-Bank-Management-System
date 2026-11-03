@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Inventory batches - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Blood bank staff</p>
+  <h1>Inventory batches</h1>
+  <form method="get" style="display:flex; gap:12px; align-items:flex-end; margin-bottom:20px;">
+    <div class="field" style="margin-bottom:0;">
+      <label>Blood group</label>
+      <select name="blood_group">
+        <option value="">All</option>
+        {% for g in blood_groups %}<option value="{{ g }}" {% if g == blood_group %}selected{% endif %}>{{ g }}</option>{% endfor %}
+      </select>
+    </div>
+    <button class="btn" type="submit">Filter</button>
+  </form>
+  {% if page_obj.object_list %}
+  <table class="data">
+    <thead><tr><th>#</th><th>Blood group</th><th>Remaining / Total</th><th>Collected</th><th>Expires</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for batch in page_obj %}
+      <tr>
+        <td><a href="{% url 'inventory:batch_detail' pk=batch.pk %}">{{ batch.pk }}</a></td>
+        <td>{{ batch.blood_group }}</td>
+        <td>{{ batch.quantity_remaining }} / {{ batch.quantity }}</td>
+        <td>{{ batch.collection_date }}</td>
+        <td>{{ batch.expiry_date }}</td>
+        <td>
+          {% if batch.is_expired %}<span class="badge rejected">Expired</span>
+          {% elif batch.is_depleted %}<span class="badge donor">Depleted</span>
+          {% else %}<span class="badge eligible">Available</span>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <nav class="pagination">
+    {% if page_obj.has_previous %}<a class="btn small secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+    <span class="muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a class="btn small secondary" href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+  </nav>
+  {% else %}
+  <p class="empty-state">No inventory batches recorded yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

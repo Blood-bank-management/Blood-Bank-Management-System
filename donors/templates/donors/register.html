@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Register as a Donor - Blood Bank Management System{% endblock %}
+{% block main_class %} narrow{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Donor registration</p>
+  <h1>Register as a donor</h1>
+  <p class="muted">Create an account to track your donation history and submit blood requests. You'll be registered with donor-level access.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="nonfield-errors">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="grid-2">
+      <div class="field">
+        <label for="{{ form.first_name.id_for_label }}">First name</label>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+      </div>
+      <div class="field">
+        <label for="{{ form.last_name.id_for_label }}">Last name</label>
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+      </div>
+    </div>
+    <div class="field">
+      <label for="{{ form.username.id_for_label }}">Username</label>
+      {{ form.username }}
+      {{ form.username.errors }}
+    </div>
+    <div class="field">
+      <label for="{{ form.email.id_for_label }}">E-mail</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="{{ form.phone_number.id_for_label }}">Phone number</label>
+        {{ form.phone_number }}
+        {{ form.phone_number.errors }}
+      </div>
+      <div class="field">
+        <label for="{{ form.date_of_birth.id_for_label }}">Date of birth</label>
+        {{ form.date_of_birth }}
+        {{ form.date_of_birth.errors }}
+      </div>
+    </div>
+    <div class="field">
+      <label for="{{ form.blood_group.id_for_label }}">Blood group</label>
+      {{ form.blood_group }}
+      {{ form.blood_group.errors }}
+    </div>
+    <div class="field">
+      <label for="{{ form.address.id_for_label }}">Address</label>
+      {{ form.address }}
+      {{ form.address.errors }}
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="{{ form.password1.id_for_label }}">Password</label>
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+      </div>
+      <div class="field">
+        <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+      </div>
+    </div>
+    <div class="actions"><button class="btn" type="submit">Create my account</button></div>
+  </form>
+  <p class="muted" style="margin-top:18px;">Already registered? <a href="{% url 'authentication:login' %}">Log in</a>.</p>
+</section>
+{% endblock %}

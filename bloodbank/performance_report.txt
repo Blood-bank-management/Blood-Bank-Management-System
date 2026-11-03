@@ -1,0 +1,52 @@
+BBMS-53: Performance Test Report
+
+Test objective:
+Verify that common pages have a 90th-percentile (p90) response time of 3 seconds or less.
+
+Test environment:
+- Framework: Django 6.1.1
+- Server: Local development server
+- Address: http://127.0.0.1:8000/
+- Requests per page: 20
+
+Preliminary results:
+- Login page: p90 = 5.88 ms; maximum = 172.54 ms
+- Availability page: p90 = 8.02 ms; maximum = 11.14 ms
+- Inventory summary page: p90 = 13.97 ms; maximum = 39.96 ms
+
+Acceptance threshold:
+p90 response time <= 3000 ms.
+
+Limitation:
+The measurement script did not use an authenticated browser session. Availability and inventory summary results may represent redirects to the login page rather than the actual authenticated pages. Authenticated performance verification is still required.
+
+Status:
+Preliminary measurements are below the target. Final acceptance is pending authenticated verification.
+
+Authenticated performance test results:
+
+Test command: `python manage.py test inventory.performance_test -v 2`
+
+- Availability search: p90 = 0.0024 seconds (2.4 ms)
+- Inventory summary: p90 = 0.0083 seconds (8.3 ms)
+- Requests per page: 20
+- Result: Both authenticated pages passed the 3-second p90 threshold.
+- Test status: Passed in the local Django test environment.
+
+Limitation: Login-page performance and production-environment performance still require verification.
+
+**BBMS-53 — Final Local Performance Test Results**
+
+Test command: `python manage.py test inventory.performance_test -v 2`
+
+| Page | p90 response time | Target | Result |
+|---|---:|---:|---|
+| Login | 0.0031 seconds | ≤ 3 seconds | Pass |
+| Availability search | 0.0032 seconds | ≤ 3 seconds | Pass |
+| Inventory summary | 0.0076 seconds | ≤ 3 seconds | Pass |
+
+- Requests per page: 20
+- Test environment: Local Django test environment
+- Test outcome: All three page checks passed.
+
+**Limitation:** These are local test results, not production performance measurements. Production performance should be verified in the deployed test environment if required by the team.

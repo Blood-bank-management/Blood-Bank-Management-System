@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Batch #{{ batch.pk }} - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Blood bank staff</p>
+  <h1>Batch #{{ batch.pk }}: {{ batch.blood_group }}</h1>
+  <table class="data">
+    <tr><th>Remaining</th><td>{{ batch.quantity_remaining }} / {{ batch.quantity }}</td></tr>
+    <tr><th>Collected</th><td>{{ batch.collection_date }}</td></tr>
+    <tr><th>Expires</th><td>{{ batch.expiry_date }}</td></tr>
+    <tr><th>Source donation</th><td>{% if batch.source_donation %}{{ batch.source_donation.collection_reference }}{% else %}Manually added{% endif %}</td></tr>
+    <tr><th>Notes</th><td>{{ batch.notes|default:"-" }}</td></tr>
+  </table>
+</section>
+
+<section class="card">
+  <h2>Adjust this batch</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="nonfield-errors">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<p class="hint">{{ field.help_text }}</p>{% endif %}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+    <button class="btn" type="submit">Apply adjustment</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Transaction history</h2>
+  {% if transactions %}
+  <table class="data">
+    <tr><th>When</th><th>Type</th><th>Change</th><th>Balance after</th><th>By</th><th>Reason</th></tr>
+    {% for t in transactions %}
+    <tr>
+      <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
+      <td>{{ t.get_transaction_type_display }}</td>
+      <td>{{ t.quantity_delta }}</td>
+      <td>{{ t.balance_after }}</td>
+      <td>{{ t.performed_by.get_username|default:"-" }}</td>
+      <td>{{ t.reason }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty-state">No transactions for this batch yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

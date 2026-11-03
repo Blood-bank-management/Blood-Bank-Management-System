@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Blood Availability - Blood Bank Management System{% endblock %}
+
+{% block content %}
+<section class="card">
+    <p class="lead">Blood availability search</p>
+    <h1>Check blood availability</h1>
+    <form method="get" class="field" style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-top:18px;">
+        <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
+            <label for="blood_group">Blood group</label>
+            <select name="blood_group" id="blood_group">
+                <option value="">-- Select --</option>
+                {% for g in blood_groups %}
+                <option value="{{ g }}" {% if g == blood_group %}selected{% endif %}>{{ g }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="btn" type="submit">Search</button>
+    </form>
+
+    {% if result is not None %}
+        <h2>Available: {{ result }} unit{{ result|pluralize }}</h2>
+    {% endif %}
+    {% if message %}
+        <p class="muted">{{ message }}</p>
+    {% endif %}
+</section>
+{% endblock %}

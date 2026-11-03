@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Audit log - Blood Bank Management System{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="lead">Staff/admin</p>
+  <h1>Audit log</h1>
+  <form method="get" style="display:flex; gap:12px; align-items:flex-end; margin-bottom:20px; flex-wrap:wrap;">
+    <div class="field" style="margin-bottom:0;">
+      <label>Action</label>
+      <select name="action">
+        <option value="">All</option>
+        {% for value, label in action_choices %}<option value="{{ value }}" {% if value == action %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:0;">
+      <label>Entity type</label>
+      <input type="text" name="entity_type" value="{{ entity_type }}" placeholder="e.g. donation">
+    </div>
+    <button class="btn" type="submit">Filter</button>
+  </form>
+  {% if page_obj.object_list %}
+  <table class="data">
+    <thead><tr><th>When</th><th>Action</th><th>Entity</th><th>Actor</th><th>Previous</th><th>New</th><th>Reason</th></tr></thead>
+    <tbody>
+      {% for entry in page_obj %}
+      <tr>
+        <td>{{ entry.created_at|date:"Y-m-d H:i" }}</td>
+        <td>{{ entry.get_action_display }}</td>
+        <td>{{ entry.entity_type }}#{{ entry.entity_id }}</td>
+        <td>{{ entry.actor.get_username|default:"system" }}</td>
+        <td>{{ entry.previous_value|truncatechars:40 }}</td>
+        <td>{{ entry.new_value|truncatechars:40 }}</td>
+        <td>{{ entry.reason|truncatechars:40 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <nav class="pagination">
+    {% if page_obj.has_previous %}<a class="btn small secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+    <span class="muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a class="btn small secondary" href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+  </nav>
+  {% else %}
+  <p class="empty-state">No audit entries match these filters.</p>
+  {% endif %}
+</section>
+{% endblock %}
