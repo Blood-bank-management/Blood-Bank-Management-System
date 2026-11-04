@@ -26,3 +26,12 @@ class UserListFilterTests(TestCase):
 
     def test_search_matches_email(self):
         self.assertEqual(self._usernames({"q": "bob@example"}), ["bob_donor"])
+
+    def test_role_filter_staff_excludes_admins_and_donors(self):
+        self.assertEqual(self._usernames({"role": "staff"}), ["alice_staff"])
+
+    def test_role_filter_admin(self):
+        self.assertEqual(self._usernames({"role": "admin"}), ["root_admin"])
+
+    def test_role_filter_donor(self):
+        self.assertEqual(self._usernames({"role": "donor"}), ["bob_donor", "carol_inactive"])
