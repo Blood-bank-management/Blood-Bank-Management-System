@@ -6,9 +6,9 @@ committed code; nothing is estimated.
 
 | Field | Value |
 | --- | --- |
-| Run at | 2026-11-04 08:35:56 IST |
+| Run at | 2026-11-04 10:23:27 IST |
 | Run by | Pramay Dubey <pramaydubey21@gmail.com> |
-| Commit tested | `629aef5` (branch `main`) |
+| Commit tested | `c23cac5` (branch `main`) |
 | Python | Python 3.13.7 |
 | Django | 6.1.1 |
 | OS | Darwin 27.0.0 |
@@ -20,13 +20,13 @@ committed code; nothing is estimated.
 
 | ID | Check | Command | Result | Time |
 | --- | --- | --- | --- | --- |
-| REG-01 | Django system check | `python manage.py check` | PASS | 1s |
-| REG-02 | Migration drift check | `python manage.py makemigrations --check --dry-run` | PASS | 0s |
+| REG-01 | Django system check | `python manage.py check` | PASS | 0s |
+| REG-02 | Migration drift check | `python manage.py makemigrations --check --dry-run` | PASS | 1s |
 | REG-03 | Fresh-database migration | `python manage.py migrate --noinput` | PASS | 0s |
-| REG-04 | Full automated test suite | `python manage.py test --noinput` | PASS | 34s |
+| REG-04 | Full automated test suite | `python manage.py test --noinput` | PASS | 35s |
 | REG-05 | Performance suite (not auto-discovered; run explicitly) | `python manage.py test inventory.performance_test --noinput -v 2` | PASS | 7s |
 | REG-06 | Demo seed command, first run | `python manage.py seed_demo_data` | PASS | 1s |
-| REG-07 | Demo seed command, second run (idempotency) | `python manage.py seed_demo_data` | PASS | 0s |
+| REG-07 | Demo seed command, second run (idempotency) | `python manage.py seed_demo_data` | PASS | 1s |
 
 ## Demo data row counts (after two seed runs)
 
@@ -56,7 +56,7 @@ BBMS_Test_Case_Catalogue.xlsx; REG-05 re-verifies BBMS-NF-001.
 ### REG-01 — Django system check
 
 Command: `python manage.py check`  
-Exit code: 0 — **PASS** (1s)
+Exit code: 0 — **PASS** (0s)
 
 ```
 System check identified no issues (0 silenced).
@@ -65,7 +65,7 @@ System check identified no issues (0 silenced).
 ### REG-02 — Migration drift check
 
 Command: `python manage.py makemigrations --check --dry-run`  
-Exit code: 0 — **PASS** (0s)
+Exit code: 0 — **PASS** (1s)
 
 ```
 No changes detected
@@ -115,13 +115,13 @@ Running migrations:
 ### REG-04 — Full automated test suite
 
 Command: `python manage.py test --noinput`  
-Exit code: 0 — **PASS** (34s)
+Exit code: 0 — **PASS** (35s)
 
 ```
 Creating test database for alias 'default'...
 ...................................................................................................................
 ----------------------------------------------------------------------
-Ran 115 tests in 33.525s
+Ran 115 tests in 34.971s
 
 OK
 Destroying test database for alias 'default'...
@@ -161,7 +161,7 @@ Exit code: 0 — **PASS** (7s)
   Applying sessions.0001_initial...test_common_pages_response_time (inventory.performance_test.AuthenticatedPagePerformanceTests.test_common_pages_response_time) ... ok
 
 ----------------------------------------------------------------------
-Ran 1 test in 6.639s
+Ran 1 test in 6.874s
 
 OK
 Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
@@ -170,10 +170,10 @@ System check identified no issues (0 silenced).
 Login: p90=0.0007s (target <= 3.0s)
 Request tracking: p90=0.0006s (target <= 3.0s)
 Availability: p90=0.0006s (target <= 3.0s)
-Inventory dashboard: p90=0.0028s (target <= 3.0s)
+Inventory dashboard: p90=0.0029s (target <= 3.0s)
 Donor list: p90=0.0016s (target <= 3.0s)
 Donation list: p90=0.0011s (target <= 3.0s)
-Request queue: p90=0.0011s (target <= 3.0s)
+Request queue: p90=0.0012s (target <= 3.0s)
 Administrative user list: p90=0.0020s (target <= 3.0s)
 ```
 
@@ -212,7 +212,7 @@ Demo data ready. Log in with:
 ### REG-07 — Demo seed command, second run (idempotency)
 
 Command: `python manage.py seed_demo_data`  
-Exit code: 0 — **PASS** (0s)
+Exit code: 0 — **PASS** (1s)
 
 ```
 
