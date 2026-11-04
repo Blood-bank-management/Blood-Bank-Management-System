@@ -7,6 +7,7 @@ omit =
     */tests/*
     */tests.py
     */tests_*.py
+    */test_*.py
     */performance_test.py
     manage.py
     bloodbank/settings.py
