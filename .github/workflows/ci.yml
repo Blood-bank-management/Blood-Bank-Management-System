@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: ci-throwaway-key-not-for-deployment
+      DJANGO_DEBUG: "True"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Django system check
+        run: python manage.py check
+      - name: Migration drift check
+        run: python manage.py makemigrations --check --dry-run
+      - name: Apply migrations
+        run: python manage.py migrate --noinput
+      - name: Full test suite
+        run: python manage.py test --noinput -v 2
+      - name: Performance suite (BBMS-NF-001)
+        run: python manage.py test inventory.performance_test --noinput -v 2
+      - name: Seed demo data twice (idempotency)
+        run: |
+          python manage.py seed_demo_data
+          python manage.py seed_demo_data
