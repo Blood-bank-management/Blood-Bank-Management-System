@@ -35,3 +35,9 @@ class UserListFilterTests(TestCase):
 
     def test_role_filter_donor(self):
         self.assertEqual(self._usernames({"role": "donor"}), ["bob_donor", "carol_inactive"])
+
+    def test_status_filter_inactive(self):
+        self.assertEqual(self._usernames({"status": "inactive"}), ["carol_inactive"])
+
+    def test_status_filter_active(self):
+        self.assertEqual(self._usernames({"status": "active"}), ["alice_staff", "bob_donor", "root_admin"])
