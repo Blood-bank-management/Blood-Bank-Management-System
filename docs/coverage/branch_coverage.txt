@@ -1,0 +1,26 @@
+Branch coverage per file (coverage.py 7.17.1, branch=True)
+
+File                                          Covered  Total  Branch%
+----------------------------------------------------------------------
+accounts/forms.py                                   1      2    50.0%
+accounts/views.py                                  19     40    47.5%
+auditlog/views.py                                   3      4    75.0%
+authentication/decorators.py                        4      4   100.0%
+authentication/forms.py                             8      8   100.0%
+authentication/views.py                             3      4    75.0%
+bloodbank/constants.py                              4      4   100.0%
+donations/forms.py                                  4      8    50.0%
+donations/models.py                                 1      2    50.0%
+donations/services.py                               2      2   100.0%
+donations/views.py                                  8     14    57.1%
+donors/forms.py                                    15     18    83.3%
+donors/management/commands/seed_demo_data.py        0     22     0.0%
+donors/views.py                                    14     20    70.0%
+inventory/forms.py                                  0      2     0.0%
+inventory/models.py                                 4      4   100.0%
+inventory/services.py                              13     18    72.2%
+inventory/views.py                                 10     14    71.4%
+requests/forms.py                                   2      2   100.0%
+requests/views.py                                  17     24    70.8%
+----------------------------------------------------------------------
+TOTAL                                             132    216    61.1%
