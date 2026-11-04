@@ -1,0 +1,20 @@
+[run]
+branch = True
+source = .
+omit =
+    .venv/*
+    */migrations/*
+    */tests/*
+    */tests.py
+    */tests_*.py
+    */performance_test.py
+    manage.py
+    bloodbank/settings.py
+    bloodbank/wsgi.py
+    bloodbank/asgi.py
+    scripts/*
+
+[report]
+show_missing = True
+skip_empty = True
+precision = 1
