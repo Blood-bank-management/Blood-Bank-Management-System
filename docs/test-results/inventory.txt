@@ -1,0 +1,73 @@
+Module: inventory
+Run: Wed Nov  4 10:31:38 IST 2026
+Commit: 49249dc
+
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 22 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: authentication, messages, staticfiles
+  Apply all migrations: admin, auditlog, auth, contenttypes, donations, donors, inventory, requests, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying auditlog.0001_initial... OK
+  Applying auditlog.0002_rename_auditlog_entity_idx_auditlog_au_entity__87d33e_idx_and_more... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying donors.0001_initial... OK
+  Applying donations.0001_initial... OK
+  Applying donations.0002_rename_donation_donor_date_idx_donations_d_donor_i_1ec17d_idx_and_more... OK
+  Applying donors.0002_eligibilityhistory... OK
+  Applying requests.0001_initial... OK
+  Applying requests.0002_bloodinventory_bloodissue... OK
+  Applying inventory.0001_initial... OK
+  Applying inventory.0002_unified_inventory_architecture... OK
+  Applying inventory.0003_rename_inv_bg_expiry_idx_inventory_b_blood_g_8a64bc_idx_and_more... OK
+  Applying requests.0003_remove_duplicate_inventory... OK
+  Applying sessions.0001_initial...test_expiry_date_cannot_be_before_collection_date (inventory.tests.BloodInventoryTests.test_expiry_date_cannot_be_before_collection_date) ... ok
+test_inventory_quantities_are_non_negative (inventory.tests.BloodInventoryTests.test_inventory_quantities_are_non_negative) ... ok
+test_inventory_quantity_cannot_be_negative (inventory.tests.BloodInventoryTests.test_inventory_quantity_cannot_be_negative) ... ok
+test_inventory_summary_includes_zero_stock (inventory.tests.BloodInventoryTests.test_inventory_summary_includes_zero_stock) ... ok
+test_search_excludes_expired_units (inventory.tests.BloodInventoryTests.test_search_excludes_expired_units) ... ok
+test_search_handles_unsupported_blood_group (inventory.tests.BloodInventoryTests.test_search_handles_unsupported_blood_group) ... ok
+test_search_matches_current_inventory (inventory.tests.BloodInventoryTests.test_search_matches_current_inventory) ... ok
+test_search_requires_blood_group (inventory.tests.BloodInventoryTests.test_search_requires_blood_group) ... ok
+test_search_shows_available_quantity (inventory.tests.BloodInventoryTests.test_search_shows_available_quantity) ... ok
+test_search_shows_no_stock_message (inventory.tests.BloodInventoryTests.test_search_shows_no_stock_message) ... ok
+test_anonymous_redirected_from_inventory_summary (inventory.tests_access.InventoryStaffViewAccessTests.test_anonymous_redirected_from_inventory_summary) ... ok
+test_donor_cannot_view_batch_list_or_adjust (inventory.tests_access.InventoryStaffViewAccessTests.test_donor_cannot_view_batch_list_or_adjust) ... ok
+test_staff_can_view_batch_list_and_detail (inventory.tests_access.InventoryStaffViewAccessTests.test_staff_can_view_batch_list_and_detail) ... ok
+test_adjust_batch_requires_a_reason (inventory.tests_services.InventoryServiceTests.test_adjust_batch_requires_a_reason) ... ok
+test_available_units_excludes_depleted_batches (inventory.tests_services.InventoryServiceTests.test_available_units_excludes_depleted_batches) ... ok
+test_concurrent_issue_cannot_drive_balance_negative (inventory.tests_services.InventoryServiceTests.test_concurrent_issue_cannot_drive_balance_negative)
+Part 2.A 'safe concurrent transactions': issue_units locks candidate ... ok
+test_issue_units_decrements_oldest_expiring_batch_first (inventory.tests_services.InventoryServiceTests.test_issue_units_decrements_oldest_expiring_batch_first) ... ok
+test_issue_units_excludes_expired_batches (inventory.tests_services.InventoryServiceTests.test_issue_units_excludes_expired_batches) ... ok
+test_issue_units_raises_on_insufficient_stock_and_changes_nothing (inventory.tests_services.InventoryServiceTests.test_issue_units_raises_on_insufficient_stock_and_changes_nothing) ... ok
+test_no_negative_stock_possible_via_adjust (inventory.tests_services.InventoryServiceTests.test_no_negative_stock_possible_via_adjust) ... ok
+test_receive_batch_credits_stock_and_writes_ledger_row (inventory.tests_services.InventoryServiceTests.test_receive_batch_credits_stock_and_writes_ledger_row) ... ok
+test_receive_batch_defaults_expiry_to_shelf_life (inventory.tests_services.InventoryServiceTests.test_receive_batch_defaults_expiry_to_shelf_life) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 4.881s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).
