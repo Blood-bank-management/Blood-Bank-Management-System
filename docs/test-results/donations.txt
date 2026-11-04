@@ -1,0 +1,64 @@
+Module: donations
+Run: Wed Nov  4 10:28:42 IST 2026
+Commit: 63c78ab
+
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 10 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: authentication, messages, staticfiles
+  Apply all migrations: admin, auditlog, auth, contenttypes, donations, donors, inventory, requests, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying auditlog.0001_initial... OK
+  Applying auditlog.0002_rename_auditlog_entity_idx_auditlog_au_entity__87d33e_idx_and_more... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying donors.0001_initial... OK
+  Applying donations.0001_initial... OK
+  Applying donations.0002_rename_donation_donor_date_idx_donations_d_donor_i_1ec17d_idx_and_more... OK
+  Applying donors.0002_eligibilityhistory... OK
+  Applying requests.0001_initial... OK
+  Applying requests.0002_bloodinventory_bloodissue... OK
+  Applying inventory.0001_initial... OK
+  Applying inventory.0002_unified_inventory_architecture... OK
+  Applying inventory.0003_rename_inv_bg_expiry_idx_inventory_b_blood_g_8a64bc_idx_and_more... OK
+  Applying requests.0003_remove_duplicate_inventory... OK
+  Applying sessions.0001_initial...test_donation_collection_date_cannot_be_future (donations.tests.DonationServiceTests.test_donation_collection_date_cannot_be_future) ... ok
+test_donation_quantity_must_be_positive (donations.tests.DonationServiceTests.test_donation_quantity_must_be_positive) ... ok
+test_duplicate_collection_reference_is_rejected (donations.tests.DonationServiceTests.test_duplicate_collection_reference_is_rejected)
+Part 3.A.2: prevent duplicate inventory credit on form resubmission. ... ok
+test_record_donation_creates_donation_and_credits_inventory (donations.tests.DonationServiceTests.test_record_donation_creates_donation_and_credits_inventory)
+Integration: donation creation -> inventory increase (Part 5.B). ... ok
+test_rejected_donation_does_not_credit_inventory (donations.tests.DonationServiceTests.test_rejected_donation_does_not_credit_inventory)
+Part 3.A.2: rejected donations never become available stock. ... ok
+test_anonymous_cannot_see_donation_list (donations.tests.DonationViewAccessTests.test_anonymous_cannot_see_donation_list) ... ok
+test_donor_cannot_record_donation (donations.tests.DonationViewAccessTests.test_donor_cannot_record_donation) ... ok
+test_donor_history_url_has_no_id_parameter_to_tamper_with (donations.tests.DonationViewAccessTests.test_donor_history_url_has_no_id_parameter_to_tamper_with) ... ok
+test_donor_sees_only_their_own_history_not_a_url_pk (donations.tests.DonationViewAccessTests.test_donor_sees_only_their_own_history_not_a_url_pk)
+Part 3.A.3 / 3.F IDOR: donations:my_history takes no pk -- there is ... ok
+test_staff_can_record_donation (donations.tests.DonationViewAccessTests.test_staff_can_record_donation) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.823s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).
