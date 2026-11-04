@@ -32,3 +32,20 @@ class BatchAdjustmentTests(TestCase):
         self.assertEqual(txn.quantity_delta, -1)
         self.assertEqual(txn.balance_after, 4)
         self.assertEqual(txn.reason, "Spoiled unit")
+
+    def test_zero_adjustment_rejected_by_form(self):
+        self.client.force_login(self.staff)
+        response = self.client.post(self.url, {"delta": 0, "reason": "No-op"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Adjustment cannot be zero.")
+        self.batch.refresh_from_db()
+        self.assertEqual(self.batch.quantity_remaining, 5)
+
+    def test_zero_adjustment_rejected_by_service(self):
+        with self.assertRaises(ValidationError):
+            adjust_batch(batch=self.batch, delta=0, performed_by=self.staff, reason="No-op")
+        self.assertFalse(
+            InventoryTransaction.objects.filter(
+                batch=self.batch, transaction_type=InventoryTransaction.TransactionType.ADJUSTMENT
+            ).exists()
+        )
