@@ -1,0 +1,94 @@
+Module: authentication
+Run: Wed Nov  4 10:27:34 IST 2026
+Commit: b653469
+
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 23 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: authentication, messages, staticfiles
+  Apply all migrations: admin, auditlog, auth, contenttypes, donations, donors, inventory, requests, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying auditlog.0001_initial... OK
+  Applying auditlog.0002_rename_auditlog_entity_idx_auditlog_au_entity__87d33e_idx_and_more... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying donors.0001_initial... OK
+  Applying donations.0001_initial... OK
+  Applying donations.0002_rename_donation_donor_date_idx_donations_d_donor_i_1ec17d_idx_and_more... OK
+  Applying donors.0002_eligibilityhistory... OK
+  Applying requests.0001_initial... OK
+  Applying requests.0002_bloodinventory_bloodissue... OK
+  Applying inventory.0001_initial... OK
+  Applying inventory.0002_unified_inventory_architecture... OK
+  Applying inventory.0003_rename_inv_bg_expiry_idx_inventory_b_blood_g_8a64bc_idx_and_more... OK
+  Applying requests.0003_remove_duplicate_inventory... OK
+  Applying sessions.0001_initial...test_auth_ut_07_unauthenticated_user_cannot_access_protected_page (authentication.tests.test_access.ProtectedPageTests.test_auth_ut_07_unauthenticated_user_cannot_access_protected_page)
+AUTH-UT-07 (SR-001): anonymous requests are redirected to login. ... ok
+test_auth_ut_08_authenticated_user_can_access_protected_page (authentication.tests.test_access.ProtectedPageTests.test_auth_ut_08_authenticated_user_can_access_protected_page)
+AUTH-UT-08: a logged-in user can open the protected page. ... ok
+test_protected_page_offers_csrf_protected_logout_form (authentication.tests.test_access.ProtectedPageTests.test_protected_page_offers_csrf_protected_logout_form) ... ok
+test_auth_ut_02_invalid_password_rejected (authentication.tests.test_login.InvalidLoginTests.test_auth_ut_02_invalid_password_rejected)
+AUTH-UT-02: wrong password is rejected. ... ok
+test_auth_ut_03_invalid_email_rejected (authentication.tests.test_login.InvalidLoginTests.test_auth_ut_03_invalid_email_rejected)
+AUTH-UT-03: unknown e-mail address is rejected. ... ok
+test_auth_ut_03_invalid_username_rejected (authentication.tests.test_login.InvalidLoginTests.test_auth_ut_03_invalid_username_rejected)
+AUTH-UT-03: unknown username is rejected. ... ok
+test_auth_ut_04_empty_username_rejected (authentication.tests.test_login.InvalidLoginTests.test_auth_ut_04_empty_username_rejected)
+AUTH-UT-04: empty username/email is rejected. ... ok
+test_auth_ut_05_empty_password_rejected (authentication.tests.test_login.InvalidLoginTests.test_auth_ut_05_empty_password_rejected)
+AUTH-UT-05: empty password is rejected. ... ok
+test_auth_ut_10_ambiguous_email_rejected (authentication.tests.test_login.InvalidLoginTests.test_auth_ut_10_ambiguous_email_rejected)
+AUTH-UT-10: an e-mail shared by several accounts cannot be used to log in. ... ok
+test_auth_ut_11_inactive_user_rejected (authentication.tests.test_login.InvalidLoginTests.test_auth_ut_11_inactive_user_rejected)
+AUTH-UT-11: a deactivated account cannot log in. ... ok
+test_auth_ut_12_password_is_hashed_not_plaintext (authentication.tests.test_login.LoginSecurityTests.test_auth_ut_12_password_is_hashed_not_plaintext)
+AUTH-UT-12: passwords are stored hashed (SR-004 groundwork). ... ok
+test_auth_ut_13_login_post_requires_csrf_token (authentication.tests.test_login.LoginSecurityTests.test_auth_ut_13_login_post_requires_csrf_token)
+AUTH-UT-13: login POST without a CSRF token is refused. ... ok
+test_auth_ut_14_safe_next_url_is_honoured (authentication.tests.test_login.LoginSecurityTests.test_auth_ut_14_safe_next_url_is_honoured)
+AUTH-UT-14: a same-site ?next target is followed after login. ... ok
+test_auth_ut_15_external_next_url_is_ignored (authentication.tests.test_login.LoginSecurityTests.test_auth_ut_15_external_next_url_is_ignored)
+AUTH-UT-15: an off-site ?next target is ignored (no open redirect). ... ok
+test_auth_ut_16_logged_in_user_is_redirected_from_login_page (authentication.tests.test_login.LoginSecurityTests.test_auth_ut_16_logged_in_user_is_redirected_from_login_page)
+AUTH-UT-16: an already authenticated user is sent to the landing page. ... ok
+test_auth_ut_01_valid_credentials_authenticate (authentication.tests.test_login.ValidLoginTests.test_auth_ut_01_valid_credentials_authenticate)
+AUTH-UT-01: valid credentials authenticate successfully. ... ok
+test_auth_ut_01_valid_credentials_log_the_user_in (authentication.tests.test_login.ValidLoginTests.test_auth_ut_01_valid_credentials_log_the_user_in)
+AUTH-UT-01: posting valid credentials starts a session and redirects. ... ok
+test_auth_ut_09_login_with_email (authentication.tests.test_login.ValidLoginTests.test_auth_ut_09_login_with_email)
+AUTH-UT-09: login works with the e-mail address (case-insensitive). ... ok
+test_login_page_renders_with_csrf_token (authentication.tests.test_login.ValidLoginTests.test_login_page_renders_with_csrf_token) ... ok
+test_auth_ut_06_logout_terminates_session (authentication.tests.test_logout.LogoutTests.test_auth_ut_06_logout_terminates_session)
+AUTH-UT-06: logout ends the authenticated session. ... ok
+test_auth_ut_17_logout_requires_post (authentication.tests.test_logout.LogoutTests.test_auth_ut_17_logout_requires_post)
+AUTH-UT-17: GET does not log the user out. ... ok
+test_auth_ut_18_logout_post_requires_csrf_token (authentication.tests.test_logout.LogoutTests.test_auth_ut_18_logout_post_requires_csrf_token)
+AUTH-UT-18: logout POST without a CSRF token is refused. ... ok
+test_auth_ut_19_logout_when_anonymous_is_harmless (authentication.tests.test_logout.LogoutTests.test_auth_ut_19_logout_when_anonymous_is_harmless)
+AUTH-UT-19: logging out without a session just redirects to login. ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 4.424s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).
