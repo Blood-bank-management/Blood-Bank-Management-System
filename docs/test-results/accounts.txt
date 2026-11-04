@@ -1,0 +1,63 @@
+Module: accounts
+Run: Wed Nov  4 10:32:23 IST 2026
+Commit: 4eb28f6
+
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 10 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: authentication, messages, staticfiles
+  Apply all migrations: admin, auditlog, auth, contenttypes, donations, donors, inventory, requests, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying auditlog.0001_initial... OK
+  Applying auditlog.0002_rename_auditlog_entity_idx_auditlog_au_entity__87d33e_idx_and_more... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying donors.0001_initial... OK
+  Applying donations.0001_initial... OK
+  Applying donations.0002_rename_donation_donor_date_idx_donations_d_donor_i_1ec17d_idx_and_more... OK
+  Applying donors.0002_eligibilityhistory... OK
+  Applying requests.0001_initial... OK
+  Applying requests.0002_bloodinventory_bloodissue... OK
+  Applying inventory.0001_initial... OK
+  Applying inventory.0002_unified_inventory_architecture... OK
+  Applying inventory.0003_rename_inv_bg_expiry_idx_inventory_b_blood_g_8a64bc_idx_and_more... OK
+  Applying requests.0003_remove_duplicate_inventory... OK
+  Applying sessions.0001_initial...test_admin_can_access_user_list (accounts.tests.AdminUserManagementAccessTests.test_admin_can_access_user_list) ... ok
+test_anonymous_redirected_to_login (accounts.tests.AdminUserManagementAccessTests.test_anonymous_redirected_to_login) ... ok
+test_donor_cannot_access_user_list (accounts.tests.AdminUserManagementAccessTests.test_donor_cannot_access_user_list) ... ok
+test_staff_cannot_access_user_list (accounts.tests.AdminUserManagementAccessTests.test_staff_cannot_access_user_list)
+Staff != administrator: ordinary staff must not reach admin-only user management. ... ok
+test_staff_cannot_create_admin_account_via_crafted_post (accounts.tests.AdminUserManagementAccessTests.test_staff_cannot_create_admin_account_via_crafted_post)
+Part 3.D: 'ordinary staff cannot create administrator accounts'. ... ok
+test_can_deactivate_a_superuser_when_another_remains_active (accounts.tests.AdminUserManagementBehaviorTests.test_can_deactivate_a_superuser_when_another_remains_active) ... ok
+test_cannot_deactivate_the_last_active_superuser (accounts.tests.AdminUserManagementBehaviorTests.test_cannot_deactivate_the_last_active_superuser) ... ok
+test_cannot_demote_the_last_active_superuser (accounts.tests.AdminUserManagementBehaviorTests.test_cannot_demote_the_last_active_superuser)
+Part 3.D: 'do not accidentally deactivate the last active superuser' (role version). ... ok
+test_create_account_with_role_sets_flags_correctly (accounts.tests.AdminUserManagementBehaviorTests.test_create_account_with_role_sets_flags_correctly) ... ok
+test_role_change_is_audited (accounts.tests.AdminUserManagementBehaviorTests.test_role_change_is_audited) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.491s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).
