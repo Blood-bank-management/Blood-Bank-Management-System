@@ -5,8 +5,8 @@ accounts/apps.py                                   3      0      0      0 100.0%
 accounts/forms.py                                 32      0      2      1  97.1%   43->45
 accounts/models.py                                 1      0      0      0 100.0%
 accounts/urls.py                                   4      0      0      0 100.0%
-accounts/views.py                                 93     22     40      7  67.7%   23->25, 38-56, 84-85, 98-102, 106->160, 136->160
-auditlog/admin.py                                 14      3      0      0  78.6%   17, 20, 23
+accounts/views.py                                 93      7     40      6  88.7%   23->25, 84-85, 98-102, 106->160, 136->160
+auditlog/admin.py                                 14      0      0      0 100.0%
 auditlog/apps.py                                   3      0      0      0 100.0%
 auditlog/models.py                                34      1      0      0  97.1%   67
 auditlog/urls.py                                   4      0      0      0 100.0%
@@ -15,7 +15,7 @@ authentication/apps.py                             4      0      0      0 100.0%
 authentication/decorators.py                      19      0      4      0 100.0%
 authentication/forms.py                           27      0      8      0 100.0%
 authentication/urls.py                             5      0      0      0 100.0%
-authentication/views.py                           36     14      4      1  62.5%   26-27, 35-51
+authentication/views.py                           36      0      4      0 100.0%
 bloodbank/constants.py                            12      0      4      0 100.0%
 bloodbank/urls.py                                  4      0      0      0 100.0%
 donations/admin.py                                 7      0      0      0 100.0%
@@ -29,17 +29,17 @@ donors/admin.py                                    9      0      0      0 100.0%
 donors/apps.py                                     5      0      0      0 100.0%
 donors/decorators.py                               2      0      0      0 100.0%
 donors/forms.py                                   86      1     18      3  96.2%   132, 137->143, 141->143
-donors/management/commands/seed_demo_data.py      87     87     22      0   0.0%   26-265
+donors/management/commands/seed_demo_data.py      87      0     22      0 100.0%
 donors/models.py                                  51      2      0      0  96.1%   72, 145
 donors/urls.py                                     4      0      0      0 100.0%
 donors/views.py                                   57      5     20      4  85.7%   37, 58-64, 68->75, 113->129
 inventory/admin.py                                 3      0      0      0 100.0%
 inventory/apps.py                                  3      0      0      0 100.0%
-inventory/forms.py                                 9      4      2      0  45.5%   18-21
+inventory/forms.py                                 9      0      2      0 100.0%
 inventory/models.py                               54      3      4      0  94.8%   77, 91, 140
-inventory/services.py                             53      8     18      5  81.7%   52, 88, 108, 131, 138-148
+inventory/services.py                             53      2     18      2  94.4%   52, 88
 inventory/urls.py                                  4      0      0      0 100.0%
-inventory/views.py                                64     12     14      2  79.5%   16, 83, 100-112, 126-127
+inventory/views.py                                64      6     14      1  91.0%   16, 83, 111-112, 126-127
 requests/admin.py                                 14      0      0      0 100.0%
 requests/apps.py                                   4      0      0      0 100.0%
 requests/forms.py                                 17      0      2      0 100.0%
@@ -47,6 +47,6 @@ requests/models.py                                53      2      0      0  96.2%
 requests/urls.py                                   4      0      0      0 100.0%
 requests/views.py                                 89      8     24      7  86.7%   31, 55, 57, 81, 107, 125, 130-131
 ------------------------------------------------------------------------------------------
-TOTAL                                           1141    192    216     42  79.7%
+TOTAL                                           1141     57    216     36  92.9%
 
 10 empty files skipped.
